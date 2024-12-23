@@ -5,32 +5,61 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#a8150a"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Başla"
-        tools:layout_editor_absoluteX="321dp"
-        tools:layout_editor_absoluteY="218dp" />
 
-    <TextView
-        android:id="@+id/baslikText"
-        android:layout_width="320dp"
-        android:layout_height="46dp"
-        android:textColor="#cccc08"
-        android:fontFamily="@font/font"
-        android:shadowColor="@color/black"
-        android:shadowDx="10"
-        android:shadowDy="10"
-        android:shadowRadius="5"
-        android:text="KOR GLADYATORLER"
-        android:textSize="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.128" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/background" />
+
+        <TextView
+            android:id="@+id/baslikText"
+            android:layout_width="400dp"
+            android:layout_height="60dp"
+            android:fontFamily="@font/font"
+            android:shadowColor="@color/black"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="5"
+            android:text="KOR GLADYATORLER"
+            android:textColor="#cccc08"
+            android:textSize="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.108" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Başla"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/baslikText"
+            app:layout_constraintVertical_bias="0.622" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

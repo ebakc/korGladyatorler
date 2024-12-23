@@ -8,6 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
+            // Kör gladyatörler yazısının yanıp sönme efekti.
             TextView baslikText = findViewById(R.id.baslikText);
             Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
             baslikText.startAnimation(blinkAnimation);
