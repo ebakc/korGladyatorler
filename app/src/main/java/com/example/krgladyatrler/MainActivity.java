@@ -1,5 +1,6 @@
 package com.example.krgladyatrler;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
             return insets;
         });
+
+        ImageButton baslaButton = findViewById(R.id.baslaButton); // Butonu tanımladık
+        baslaButton.setOnClickListener(v -> {
+            // Zar activity'ye geçiş yapmak için Intent kullandık
+            Intent intent = new Intent(MainActivity.this, zarActivity.class);
+            startActivity(intent); // Activity geçişini başlattık
+        });
     }
+
 
     // Navigasyon bar gizleme fonksiyonu.
     private void hideSystemUI() {
