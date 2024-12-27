@@ -21,7 +21,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Random;
 
+import android.media.AudioManager;
+
 public class zarActivity extends AppCompatActivity {
+
+    private ImageButton sesButon;
+    private boolean isMusicMuted = false; // Arkaplan müziği durdurma durumu
+    private boolean isAllMuted = false;  // Tüm sesleri kapatma durumu
 
     private ImageView oyuncu1Zar, oyuncu2Zar;
     private ImageButton zarButton, devamEtButton;
@@ -81,11 +87,42 @@ public class zarActivity extends AppCompatActivity {
             return insets;
         });
 
-        ImageButton baslaButton = findViewById(R.id.devamEtButton); // Butonu tanımladık
-        baslaButton.setOnClickListener(v -> {
-            // Zar activity'ye geçiş yapmak için Intent kullandık
-            Intent intent = new Intent(zarActivity.this, itemActivity.class);
-            startActivity(intent); // Activity geçişini başlattık
+        // sesButon tanımlama
+        sesButon = findViewById(R.id.sesbutton2);
+
+        // Arkaplan müziğini başlat
+        Intent musicServiceIntent = new Intent(this, MusicService.class);
+        startService(musicServiceIntent);
+
+        // sesButon için tıklama işlemi
+        sesButon.setOnClickListener(v -> {
+            if (!isMusicMuted && !isAllMuted) {
+                // İlk tıklama: Arkaplan müziğini kapat
+                stopService(musicServiceIntent);
+                isMusicMuted = true;
+                sesButon.setImageResource(R.drawable.sesyok); // Yeni resim
+            } else if (isMusicMuted && !isAllMuted) {
+                // İkinci tıklama: Tüm sesleri kapat
+                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+                if (audioManager != null) {
+                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true); // Tüm sesleri kapat
+                }
+                isAllMuted = true;
+                sesButon.setImageResource(R.drawable.seskapali); // Yeni resim
+            } else {
+                // Üçüncü tıklama: Tüm sesleri aç
+                Intent restartMusicService = new Intent(this, MusicService.class);
+                startService(restartMusicService);
+
+                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+                if (audioManager != null) {
+                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false); // Tüm sesleri aç
+                }
+
+                isMusicMuted = false;
+                isAllMuted = false;
+                sesButon.setImageResource(R.drawable.ses); // İlk resim
+            }
         });
     }
 

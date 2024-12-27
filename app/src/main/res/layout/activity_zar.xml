@@ -116,6 +116,20 @@
             app:layout_constraintVertical_bias="0.896"
             app:srcCompat="@drawable/devambutton" />
 
+        <ImageButton
+            android:id="@+id/sesbutton2"
+            android:layout_width="57dp"
+            android:layout_height="59dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ses" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
