@@ -23,7 +23,7 @@ import java.util.Random;
 public class zarActivity extends AppCompatActivity {
 
     private ImageView oyuncu1Zar, oyuncu2Zar;
-    private ImageButton zarButton;
+    private ImageButton zarButton, devamEtButton;
     private TextView kazananText;  // Kazanan yazısını gösterecek TextView
     private Random random = new Random();
     private Handler handler = new Handler();
@@ -52,8 +52,14 @@ public class zarActivity extends AppCompatActivity {
         // Zar butonunu tanımla
         zarButton = findViewById(R.id.zarButton);
 
+        // Devam et butonunu tanımla
+        devamEtButton = findViewById(R.id.devamEtButton);
+
         // Kazanan TextView'i tanımla
         kazananText = findViewById(R.id.kazananText);
+
+        // Devam et butonunu başlangıçta gizle
+        devamEtButton.setVisibility(View.GONE);
 
         // Zar butonuna tıklama işlemi
         zarButton.setOnClickListener(v -> {
@@ -61,7 +67,7 @@ public class zarActivity extends AppCompatActivity {
                 // Zar atma animasyonunu başlat
                 isZarAtildi = true;
                 zarButton.setEnabled(false);  // Butonu inaktif yap
-                zarButton.setVisibility(View.INVISIBLE);  // Butonu invisible yap
+                zarButton.setVisibility(View.INVISIBLE);  // Zar butonunu gizle
                 kazananText.setText("");  // Kazanan yazısını temizle
                 zarAtmaAnimasyonu();
             }
@@ -119,8 +125,9 @@ public class zarActivity extends AppCompatActivity {
                 // 3 saniye sonra butonu tekrar aktif yap
                 handler.postDelayed(() -> {
                     isZarAtildi = false;
-                    zarButton.setEnabled(true);  // Butonu tekrar aktif yap
-                    zarButton.setVisibility(View.VISIBLE);  // Butonu görünür yap
+                    zarButton.setEnabled(true);  // Zar butonunu tekrar aktif yap
+                    zarButton.setVisibility(View.INVISIBLE);  // Zar butonunu gizle
+                    devamEtButton.setVisibility(View.VISIBLE);  // Devam Et butonunu görünür yap
                 }, 1000);
             }
 
