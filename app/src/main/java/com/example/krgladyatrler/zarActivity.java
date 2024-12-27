@@ -1,5 +1,6 @@
 package com.example.krgladyatrler;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,6 +79,13 @@ public class zarActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        ImageButton baslaButton = findViewById(R.id.devamEtButton); // Butonu tanımladık
+        baslaButton.setOnClickListener(v -> {
+            // Zar activity'ye geçiş yapmak için Intent kullandık
+            Intent intent = new Intent(zarActivity.this, itemActivity.class);
+            startActivity(intent); // Activity geçişini başlattık
         });
     }
 
