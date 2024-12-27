@@ -87,8 +87,6 @@ public class zarActivity extends AppCompatActivity {
             return insets;
         });
 
-
-
         // sesButon tanımlama
         sesButon = findViewById(R.id.sesbutton2);
 
@@ -136,59 +134,60 @@ public class zarActivity extends AppCompatActivity {
     }
 
     private void zarAtmaAnimasyonu() {
-        // Runnable animasyon oluşturuluyor
+        final int[] currentFrame = {0};
+        final int animasyonSuresi = 2000; // Animasyonun toplam süresi (ms)
+        final int frameArasiSure = 200;  // Her bir zar görseli değişim süresi (ms)
+
         animasyonRunnable = new Runnable() {
             @Override
             public void run() {
-                int oyuncu1ZarIndex = random.nextInt(6);
-                int oyuncu2ZarIndex = random.nextInt(6);
+                // Her seferinde rastgele bir zar yüzü göster
+                int randomZar1 = random.nextInt(6);
+                int randomZar2 = random.nextInt(6);
 
-                // Random olarak zarları göster
-                oyuncu1Zar.setImageResource(zarResimleri[oyuncu1ZarIndex]);
-                oyuncu2Zar.setImageResource(zarResimleri[oyuncu2ZarIndex]);
+                oyuncu1Zar.setImageResource(zarResimleri[randomZar1]);
+                oyuncu2Zar.setImageResource(zarResimleri[randomZar2]);
 
-                // 300ms aralıklarla zarları döndür
-                handler.postDelayed(this, 300);
+                // Animasyon süresini kontrol et
+                currentFrame[0] += frameArasiSure;
+                if (currentFrame[0] < animasyonSuresi) {
+                    handler.postDelayed(this, frameArasiSure);
+                } else {
+                    // Animasyon bittiğinde kesin sonuç belirlenir
+                    zarSonucunuBelirle();
+                }
             }
         };
 
-        // Zarları döndürmeye başladık
+        // Animasyonu başlat
         handler.post(animasyonRunnable);
+    }
 
-        // 3 saniye sonra animasyonu durduruyor ve zarları sabitliyoruz
+    private void zarSonucunuBelirle() {
+        int finalOyuncu1Zar = random.nextInt(6);
+        int finalOyuncu2Zar = random.nextInt(6);
+
+        // Zarlar eşitse tekrar sonuç belirlenir
+        while (finalOyuncu1Zar == finalOyuncu2Zar) {
+            finalOyuncu1Zar = random.nextInt(6);
+            finalOyuncu2Zar = random.nextInt(6);
+        }
+
+        oyuncu1Zar.setImageResource(zarResimleri[finalOyuncu1Zar]);
+        oyuncu2Zar.setImageResource(zarResimleri[finalOyuncu2Zar]);
+
+        // Kazananı belirle
+        if (finalOyuncu1Zar > finalOyuncu2Zar) {
+            kazananText.setText("Oyuncu 1 Kazandı!");
+        } else {
+            kazananText.setText("Oyuncu 2 Kazandı!");
+        }
+
         handler.postDelayed(() -> {
-            // Zarları sabitle
-            int finalOyuncu1Zar = random.nextInt(6);
-            int finalOyuncu2Zar = random.nextInt(6);
-
-            // Eğer zarlar eşitse, hemen yeni zar seçilecek
-            if (finalOyuncu1Zar == finalOyuncu2Zar) {
-                // Zarlar eşitse yeni animasyon başlat
-                zarAtmaAnimasyonu();
-            } else {
-                oyuncu1Zar.setImageResource(zarResimleri[finalOyuncu1Zar]);
-                oyuncu2Zar.setImageResource(zarResimleri[finalOyuncu2Zar]);
-
-                // Kazananı belirle
-                if (finalOyuncu1Zar > finalOyuncu2Zar) {
-                    kazananText.setText("Oyuncu 1 Kazandı!");  // Kazananı yaz
-                } else if (finalOyuncu1Zar < finalOyuncu2Zar) {
-                    kazananText.setText("Oyuncu 2 Kazandı!");  // Kazananı yaz
-                }
-
-                // 3 saniye sonra butonu tekrar aktif yap
-                handler.postDelayed(() -> {
-                    isZarAtildi = false;
-                    zarButton.setEnabled(true);  // Zar butonunu tekrar aktif yap
-                    zarButton.setVisibility(View.INVISIBLE);  // Zar butonunu gizle
-                    devamEtButton.setVisibility(View.VISIBLE);  // Devam Et butonunu görünür yap
-                }, 1000);
-            }
-
-            // Animasyon bitince handler'ı temizleyelim
-            handler.removeCallbacks(animasyonRunnable);
-
-        }, 3000);  // 3 saniye sonra zarlar sabitlenir
+            isZarAtildi = false;
+            zarButton.setEnabled(true);
+            devamEtButton.setVisibility(View.VISIBLE); // Devam Et butonunu görünür yap
+        }, 1000);
     }
 
     private void hideSystemUI() {
