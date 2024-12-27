@@ -87,6 +87,8 @@ public class zarActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
         // sesButon tanımlama
         sesButon = findViewById(R.id.sesbutton2);
 
@@ -123,6 +125,13 @@ public class zarActivity extends AppCompatActivity {
                 isAllMuted = false;
                 sesButon.setImageResource(R.drawable.ses); // İlk resim
             }
+        });
+
+        ImageButton baslaButton = findViewById(R.id.devamEtButton); // Butonu tanımladık
+        baslaButton.setOnClickListener(v -> {
+            // Zar activity'ye geçiş yapmak için Intent kullandık
+            Intent intent = new Intent(zarActivity.this, itemActivity.class);
+            startActivity(intent); // Activity geçişini başlattık
         });
     }
 
