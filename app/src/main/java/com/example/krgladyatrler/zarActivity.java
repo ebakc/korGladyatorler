@@ -29,6 +29,8 @@ public class zarActivity extends AppCompatActivity {
     private boolean isMusicMuted = false; // Arkaplan müziği durdurma durumu
     private boolean isAllMuted = false;  // Tüm sesleri kapatma durumu
 
+    public int kazananOyuncu;
+
     private ImageView oyuncu1Zar, oyuncu2Zar;
     private ImageButton zarButton, devamEtButton;
     private TextView kazananText;  // Kazanan yazısını gösterecek TextView
@@ -172,8 +174,10 @@ public class zarActivity extends AppCompatActivity {
                 // Kazananı belirle
                 if (finalOyuncu1Zar > finalOyuncu2Zar) {
                     kazananText.setText("Oyuncu 1 Kazandı!");  // Kazananı yaz
+                    kazananOyuncu=1;
                 } else if (finalOyuncu1Zar < finalOyuncu2Zar) {
                     kazananText.setText("Oyuncu 2 Kazandı!");  // Kazananı yaz
+                    kazananOyuncu=2;
                 }
 
                 // 3 saniye sonra butonu tekrar aktif yap
