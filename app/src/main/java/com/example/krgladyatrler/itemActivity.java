@@ -13,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.media.AudioManager;
+
 public class itemActivity extends AppCompatActivity {
 
     @Override

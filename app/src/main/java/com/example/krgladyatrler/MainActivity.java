@@ -1,7 +1,7 @@
 package com.example.krgladyatrler;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -20,29 +20,31 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import android.media.AudioManager;
-
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton sesButon;
     private boolean isMusicMuted = false; // Arkaplan müziği durdurma durumu
     private boolean isAllMuted = false;  // Tüm sesleri kapatma durumu
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-            // Tam ekrana geçiş. (setContentView'dan önce yazılmalı.)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            // Navigasyon çubuğunu gizleme fonksiyonunu aktif ediyoruz.
+
+        // Tam ekran moduna geçiş
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Navigasyon çubuğunu gizleme fonksiyonu
         hideSystemUI();
+
         setContentView(R.layout.activity_main);
+
+        // Window insets ayarları
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
-                // Kör gladyatörler yazısının yanıp sönme efekti.
+            // Kör gladyatörler yazısının yanıp sönme efekti
             TextView baslikText = findViewById(R.id.baslikText);
             Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
             baslikText.startAnimation(blinkAnimation);
@@ -50,28 +52,30 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        ImageButton baslaButton = findViewById(R.id.baslaButton); // Butonu tanımladık
+        // Başla butonuna tıklama işlemi
+        ImageButton baslaButton = findViewById(R.id.baslaButton);
         baslaButton.setOnClickListener(v -> {
             // Zar activity'ye geçiş yapmak için Intent kullandık
             Intent intent = new Intent(MainActivity.this, zarActivity.class);
-            startActivity(intent); // Activity geçişini başlattık
+            startActivity(intent);
         });
-        // sesButon tanımlama
+
+        // Ses butonunu tanımla
         sesButon = findViewById(R.id.sesbutton);
 
         // Arkaplan müziğini başlat
         Intent musicServiceIntent = new Intent(this, MusicService.class);
         startService(musicServiceIntent);
 
-        // sesButon için tıklama işlemi
+        // Ses butonuna tıklama işlemi
         sesButon.setOnClickListener(v -> {
             if (!isMusicMuted && !isAllMuted) {
-                // İlk tıklama: Arkaplan müziğini kapat
+                // Arkaplan müziğini kapat
                 stopService(musicServiceIntent);
                 isMusicMuted = true;
                 sesButon.setImageResource(R.drawable.sesyok); // Yeni resim
             } else if (isMusicMuted && !isAllMuted) {
-                // İkinci tıklama: Tüm sesleri kapat
+                // Tüm sesleri kapat
                 AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
                 if (audioManager != null) {
                     audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true); // Tüm sesleri kapat
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 isAllMuted = true;
                 sesButon.setImageResource(R.drawable.seskapali); // Yeni resim
             } else {
-                // Üçüncü tıklama: Tüm sesleri aç
+                // Tüm sesleri aç
                 Intent restartMusicService = new Intent(this, MusicService.class);
                 startService(restartMusicService);
 
@@ -93,10 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 sesButon.setImageResource(R.drawable.ses); // İlk resim
             }
         });
-
-
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Müzik servisini durdur
+        Intent musicServiceIntent = new Intent(this, MusicService.class);
+        stopService(musicServiceIntent);  // Activity geçişi sırasında müzik durdurulacak
+    }
 
     // Navigasyon bar gizleme fonksiyonu.
     private void hideSystemUI() {
@@ -121,5 +130,4 @@ public class MainActivity extends AppCompatActivity {
             );
         }
     }
-
 }
