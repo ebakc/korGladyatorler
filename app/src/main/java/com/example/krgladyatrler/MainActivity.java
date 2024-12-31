@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         // Tam ekran moduna geçiş
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Navigasyon çubuğunu gizleme fonksiyonu
+        // Navigasyon çubuğunu gizleme
         hideSystemUI();
 
         setContentView(R.layout.activity_main);
@@ -44,75 +44,72 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
-            // Kör gladyatörler yazısının yanıp sönme efekti
-            TextView baslikText = findViewById(R.id.baslikText);
-            Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
-            baslikText.startAnimation(blinkAnimation);
-
             return insets;
         });
 
-        // Başla butonuna tıklama işlemi
+        // "Kör Gladyatörler" başlığına yanıp sönme efekti ekleme
+        TextView baslikText = findViewById(R.id.baslikText);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
+        baslikText.startAnimation(blinkAnimation);
+
+        // "Başla" butonunun tıklama işlemi
         ImageButton baslaButton = findViewById(R.id.baslaButton);
         baslaButton.setOnClickListener(v -> {
-            // Zar activity'ye geçiş yapmak için Intent kullandık
             Intent intent = new Intent(MainActivity.this, zarActivity.class);
             startActivity(intent);
         });
 
-        // Ses butonunu tanımla
+        // Ses butonu tanımlama
         sesButon = findViewById(R.id.sesbutton);
 
-        // Arkaplan müziğini başlat
+        // Arkaplan müziğini başlatma
         Intent musicServiceIntent = new Intent(this, MusicService.class);
         startService(musicServiceIntent);
 
-        // Ses butonuna tıklama işlemi
-        sesButon.setOnClickListener(v -> {
-            if (!isMusicMuted && !isAllMuted) {
-                // Arkaplan müziğini kapat
-                stopService(musicServiceIntent);
-                isMusicMuted = true;
-                sesButon.setImageResource(R.drawable.sesyok); // Yeni resim
-            } else if (isMusicMuted && !isAllMuted) {
-                // Tüm sesleri kapat
-                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-                if (audioManager != null) {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true); // Tüm sesleri kapat
-                }
-                isAllMuted = true;
-                sesButon.setImageResource(R.drawable.seskapali); // Yeni resim
-            } else {
-                // Tüm sesleri aç
-                Intent restartMusicService = new Intent(this, MusicService.class);
-                startService(restartMusicService);
-
-                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-                if (audioManager != null) {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false); // Tüm sesleri aç
-                }
-
-                isMusicMuted = false;
-                isAllMuted = false;
-                sesButon.setImageResource(R.drawable.ses); // İlk resim
-            }
-        });
+        // Ses butonuna tıklama işlemleri
+        sesButon.setOnClickListener(v -> handleSesButonu(musicServiceIntent));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Müzik servisini durdur
+        // Müzik servisini durdurma (activity arka planda iken)
         Intent musicServiceIntent = new Intent(this, MusicService.class);
-        stopService(musicServiceIntent);  // Activity geçişi sırasında müzik durdurulacak
+        stopService(musicServiceIntent);
     }
 
-    // Navigasyon bar gizleme fonksiyonu.
+    // Ses butonu işlemleri
+    private void handleSesButonu(Intent musicServiceIntent) {
+        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        if (!isMusicMuted && !isAllMuted) {
+            // Arkaplan müziğini durdur
+            stopService(musicServiceIntent);
+            isMusicMuted = true;
+            sesButon.setImageResource(R.drawable.sesyok);
+        } else if (isMusicMuted && !isAllMuted) {
+            // Tüm sesleri kapat
+            if (audioManager != null) {
+                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            }
+            isAllMuted = true;
+            sesButon.setImageResource(R.drawable.seskapali);
+        } else {
+            // Tüm sesleri aç
+            startService(musicServiceIntent);
+            if (audioManager != null) {
+                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            }
+            isMusicMuted = false;
+            isAllMuted = false;
+            sesButon.setImageResource(R.drawable.ses);
+        }
+    }
+
+    // Sistem çubuklarını gizleme ve tam ekran modu etkinleştirme
     private void hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                getWindow().setDecorFitsSystemWindows(false);
-            }
+            getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController controller = getWindow().getInsetsController();
             if (controller != null) {
                 controller.hide(WindowInsets.Type.systemBars());

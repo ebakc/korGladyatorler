@@ -35,12 +35,10 @@ public class itemActivity extends AppCompatActivity {
 
     }
 
-    // Navigasyon bar gizleme fonksiyonu.
+    // Sistem çubuklarını gizler ve tam ekran modu etkinleştirir
     private void hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                getWindow().setDecorFitsSystemWindows(false);
-            }
+            getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController controller = getWindow().getInsetsController();
             if (controller != null) {
                 controller.hide(WindowInsets.Type.systemBars());
@@ -58,5 +56,4 @@ public class itemActivity extends AppCompatActivity {
             );
         }
     }
-
 }

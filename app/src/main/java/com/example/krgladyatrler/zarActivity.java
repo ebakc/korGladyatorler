@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,14 +25,14 @@ import android.media.AudioManager;
 public class zarActivity extends AppCompatActivity {
 
     private ImageButton sesButon;
-    private boolean isMusicMuted = false; // Arkaplan müziği durdurma durumu
-    private boolean isAllMuted = false;  // Tüm sesleri kapatma durumu
+    private boolean isMusicMuted = false; // Arkaplan müziğinin durdurulup durdurulmadığını kontrol eder
+    private boolean isAllMuted = false;  // Tüm seslerin kapalı olup olmadığını kontrol eder
 
-    public int kazananOyuncu;
+    public int kazananOyuncu; // Kazanan oyuncunun bilgisini tutar
 
     private ImageView oyuncu1Zar, oyuncu2Zar;
     private ImageButton zarButton, devamEtButton;
-    private TextView kazananText;  // Kazanan yazısını gösterecek TextView
+    private TextView kazananText; // Kazananı göstermek için TextView
     private Random random = new Random();
     private Handler handler = new Handler();
     private int[] zarResimleri = {
@@ -41,160 +40,125 @@ public class zarActivity extends AppCompatActivity {
             R.drawable.zar4, R.drawable.zar5, R.drawable.zar6
     };
 
-    private boolean isZarAtildi = false; // Zar atılıp atılmadığını kontrol etmek için flag
+    private boolean isZarAtildi = false; // Zarın atılıp atılmadığını kontrol etmek için bayrak
     private Runnable animasyonRunnable; // Zar animasyonu için Runnable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        // Tam ekrana geçiş. (setContentView'dan önce yazılmalı.)
+
+        // Tam ekran modu ayarı
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // Navigasyon çubuğunu gizleme fonksiyonunu aktif ediyoruz.
         hideSystemUI();
         setContentView(R.layout.activity_zar);
 
-        // ImageView'ları tanımla
+        // Bileşenlerin tanımlanması
         oyuncu1Zar = findViewById(R.id.oyuncu1Zar);
         oyuncu2Zar = findViewById(R.id.oyuncu2Zar);
-
-        // Zar butonunu tanımla
         zarButton = findViewById(R.id.zarButton);
-
-        // Devam et butonunu tanımla
         devamEtButton = findViewById(R.id.devamEtButton);
-
-        // Kazanan TextView'i tanımla
         kazananText = findViewById(R.id.kazananText);
+        sesButon = findViewById(R.id.sesbutton2);
 
-        // Devam et butonunu başlangıçta gizle
-        devamEtButton.setVisibility(View.GONE);
+        // Başlangıç ayarları
+        devamEtButton.setVisibility(View.GONE); // "Devam Et" butonunu başlangıçta gizle
 
-        // Zar butonuna tıklama işlemi
         zarButton.setOnClickListener(v -> {
             if (!isZarAtildi) {
-                // Zar atma animasyonunu başlat
-                isZarAtildi = true;
-                zarButton.setEnabled(false);  // Butonu inaktif yap
-                zarButton.setVisibility(View.INVISIBLE);  // Zar butonunu gizle
-                kazananText.setText("");  // Kazanan yazısını temizle
-                zarAtmaAnimasyonu();
+                isZarAtildi = true; // Zarın atıldığını işaretle
+                zarButton.setEnabled(false); // Zar butonunu devre dışı bırak
+                zarButton.setVisibility(View.INVISIBLE); // Zar butonunu gizle
+                kazananText.setText(""); // Kazanan yazısını temizle
+                zarAtmaAnimasyonu(); // Zar atma animasyonunu başlat
             }
         });
 
-        // Window insets ayarları (UI elemanları için padding ekler)
+        sesButon.setOnClickListener(v -> handleSesButonu()); // Ses butonuna tıklama işlemi
+
+        devamEtButton.setOnClickListener(v -> {
+            Intent intent = new Intent(zarActivity.this, itemActivity.class);
+            startActivity(intent); // "Devam Et" butonuna tıklayınca yeni aktiviteye geç
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-
-
-        // sesButon tanımlama
-        sesButon = findViewById(R.id.sesbutton2);
-
-        // Arkaplan müziğini başlat
-        Intent musicServiceIntent = new Intent(this, MusicService.class);
-        startService(musicServiceIntent);
-
-        // sesButon için tıklama işlemi
-        sesButon.setOnClickListener(v -> {
-            if (!isMusicMuted && !isAllMuted) {
-                // İlk tıklama: Arkaplan müziğini kapat
-                stopService(musicServiceIntent);
-                isMusicMuted = true;
-                sesButon.setImageResource(R.drawable.sesyok); // Yeni resim
-            } else if (isMusicMuted && !isAllMuted) {
-                // İkinci tıklama: Tüm sesleri kapat
-                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-                if (audioManager != null) {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true); // Tüm sesleri kapat
-                }
-                isAllMuted = true;
-                sesButon.setImageResource(R.drawable.seskapali); // Yeni resim
-            } else {
-                // Üçüncü tıklama: Tüm sesleri aç
-                Intent restartMusicService = new Intent(this, MusicService.class);
-                startService(restartMusicService);
-
-                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-                if (audioManager != null) {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false); // Tüm sesleri aç
-                }
-
-                isMusicMuted = false;
-                isAllMuted = false;
-                sesButon.setImageResource(R.drawable.ses); // İlk resim
-            }
-        });
-
-        ImageButton baslaButton = findViewById(R.id.devamEtButton); // Butonu tanımladık
-        baslaButton.setOnClickListener(v -> {
-            // Zar activity'ye geçiş yapmak için Intent kullandık
-            Intent intent = new Intent(zarActivity.this, itemActivity.class);
-            startActivity(intent); // Activity geçişini başlattık
-        });
     }
 
+    // Zar animasyonunu başlatır
     private void zarAtmaAnimasyonu() {
-        // Runnable animasyon oluşturuluyor
         animasyonRunnable = new Runnable() {
             @Override
             public void run() {
+                // Zar animasyon görsellerini güncelle
                 int oyuncu1ZarIndex = random.nextInt(6);
                 int oyuncu2ZarIndex = random.nextInt(6);
 
-                // Random olarak zarları göster
                 oyuncu1Zar.setImageResource(zarResimleri[oyuncu1ZarIndex]);
                 oyuncu2Zar.setImageResource(zarResimleri[oyuncu2ZarIndex]);
 
-                // 300ms aralıklarla zarları döndür
-                handler.postDelayed(this, 300);
+                handler.postDelayed(this, 300); // 300ms aralıklarla çalıştır
             }
         };
 
-        // Zarları döndürmeye başladık
-        handler.post(animasyonRunnable);
+        handler.post(animasyonRunnable); // Animasyonu başlat
 
-        // 3 saniye sonra animasyonu durduruyor ve zarları sabitliyoruz
         handler.postDelayed(() -> {
-            // Zarları sabitle
+            handler.removeCallbacks(animasyonRunnable); // Animasyonu durdur
+
+            // Final zar değerlerini belirle
             int finalOyuncu1Zar = random.nextInt(6);
             int finalOyuncu2Zar = random.nextInt(6);
 
-            // Eğer zarlar eşitse, hemen yeni zar seçilecek
-            if (finalOyuncu1Zar == finalOyuncu2Zar) {
-                // Zarlar eşitse yeni animasyon başlat
-                zarAtmaAnimasyonu();
+            oyuncu1Zar.setImageResource(zarResimleri[finalOyuncu1Zar]);
+            oyuncu2Zar.setImageResource(zarResimleri[finalOyuncu2Zar]);
+
+            // Kazananı belirle
+            if (finalOyuncu1Zar > finalOyuncu2Zar) {
+                kazananText.setText("Oyuncu 1 Kazandı!");
+                kazananOyuncu = 1;
+            } else if (finalOyuncu1Zar < finalOyuncu2Zar) {
+                kazananText.setText("Oyuncu 2 Kazandı!");
+                kazananOyuncu = 2;
             } else {
-                oyuncu1Zar.setImageResource(zarResimleri[finalOyuncu1Zar]);
-                oyuncu2Zar.setImageResource(zarResimleri[finalOyuncu2Zar]);
-
-                // Kazananı belirle
-                if (finalOyuncu1Zar > finalOyuncu2Zar) {
-                    kazananText.setText("Oyuncu 1 Kazandı!");  // Kazananı yaz
-                    kazananOyuncu=1;
-                } else if (finalOyuncu1Zar < finalOyuncu2Zar) {
-                    kazananText.setText("Oyuncu 2 Kazandı!");  // Kazananı yaz
-                    kazananOyuncu=2;
-                }
-
-                // 3 saniye sonra butonu tekrar aktif yap
-                handler.postDelayed(() -> {
-                    isZarAtildi = false;
-                    zarButton.setEnabled(true);  // Zar butonunu tekrar aktif yap
-                    zarButton.setVisibility(View.INVISIBLE);  // Zar butonunu gizle
-                    devamEtButton.setVisibility(View.VISIBLE);  // Devam Et butonunu görünür yap
-                }, 1000);
+                kazananText.setText("Berabere, tekrar zar atılıyor...");
+                zarAtmaAnimasyonu(); // Beraberlik durumunda tekrar başlat
+                return;
             }
 
-            // Animasyon bitince handler'ı temizleyelim
-            handler.removeCallbacks(animasyonRunnable);
+            devamEtButton.setVisibility(View.VISIBLE); // "Devam Et" butonunu göster
 
-        }, 3000);  // 3 saniye sonra zarlar sabitlenir
+        }, 2000); // Animasyon süresi 2 saniye
     }
 
+    // Ses butonuna tıklama işlemini yönetir
+    private void handleSesButonu() {
+        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (!isMusicMuted && !isAllMuted) {
+            stopService(new Intent(this, MusicService.class));
+            isMusicMuted = true;
+            sesButon.setImageResource(R.drawable.sesyok);
+        } else if (isMusicMuted && !isAllMuted) {
+            if (audioManager != null) {
+                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            }
+            isAllMuted = true;
+            sesButon.setImageResource(R.drawable.seskapali);
+        } else {
+            startService(new Intent(this, MusicService.class));
+            if (audioManager != null) {
+                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            }
+            isMusicMuted = false;
+            isAllMuted = false;
+            sesButon.setImageResource(R.drawable.ses);
+        }
+    }
+
+    // Sistem çubuklarını gizler ve tam ekran modu etkinleştirir
     private void hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(false);
