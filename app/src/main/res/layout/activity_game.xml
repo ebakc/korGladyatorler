@@ -82,6 +82,7 @@
 
         <TextView
             android:id="@+id/oyuncu1Hp"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
@@ -97,6 +98,7 @@
 
         <TextView
             android:id="@+id/oyuncu2Hp"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
@@ -112,6 +114,7 @@
 
         <TextView
             android:id="@+id/hpText"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
@@ -140,13 +143,14 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Kilic"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/background"
-            app:layout_constraintHorizontal_bias="0.04"
+            app:layout_constraintHorizontal_bias="0.28"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.194"
@@ -154,6 +158,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Asa"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -168,13 +173,14 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Kalkan"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/background"
-            app:layout_constraintHorizontal_bias="0.28"
+            app:layout_constraintHorizontal_bias="0.04"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.194"
@@ -182,6 +188,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Kilic"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -196,6 +203,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Asa"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -210,6 +218,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Kalkan"
+            android:visibility="gone"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
