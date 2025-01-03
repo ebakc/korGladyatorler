@@ -18,158 +18,9 @@
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/itemsecmebackground" />
-
-        <ImageButton
-            android:id="@+id/item1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="149dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toTopOf="@+id/item5"
-            app:layout_constraintEnd_toStartOf="@+id/item"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item5"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="149dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginBottom="117dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item1"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item6"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="117dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item7"
-            app:layout_constraintStart_toEndOf="@+id/item5"
-            app:layout_constraintTop_toBottomOf="@+id/item"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item7"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginBottom="117dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item8"
-            app:layout_constraintStart_toEndOf="@+id/item6"
-            app:layout_constraintTop_toBottomOf="@+id/item2"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item8"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="17dp"
-            android:layout_marginBottom="117dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item9"
-            app:layout_constraintStart_toEndOf="@+id/item7"
-            app:layout_constraintTop_toBottomOf="@+id/item3"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item9"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="129dp"
-            android:layout_marginBottom="117dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/item8"
-            app:layout_constraintTop_toBottomOf="@+id/item4"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toTopOf="@+id/item6"
-            app:layout_constraintEnd_toStartOf="@+id/item2"
-            app:layout_constraintStart_toEndOf="@+id/item1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toTopOf="@+id/item7"
-            app:layout_constraintEnd_toStartOf="@+id/item3"
-            app:layout_constraintStart_toEndOf="@+id/item"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="17dp"
-            android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toTopOf="@+id/item8"
-            app:layout_constraintEnd_toStartOf="@+id/item4"
-            app:layout_constraintStart_toEndOf="@+id/item2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
-
-        <ImageButton
-            android:id="@+id/item4"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="102dp"
-            android:layout_marginEnd="129dp"
-            android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toTopOf="@+id/item9"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/item3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
 
         <TextView
             android:id="@+id/textView3"
@@ -183,7 +34,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.08" />
+            app:layout_constraintVertical_bias="0.098" />
+
+        <ImageButton
+            android:id="@+id/rastgeleItem"
+            android:layout_width="300px"
+            android:layout_height="300px"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintStart_toStartOf="@+id/background"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.747"
+            app:srcCompat="@drawable/a_kritikseven_kilic_01" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

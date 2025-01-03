@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // "Başla" butonunun tıklama işlemi
         ImageButton baslaButton = findViewById(R.id.baslaButton);
         baslaButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, zarActivity.class);
+            Intent intent = new Intent(MainActivity.this, gameActivity.class);
             startActivity(intent);
         });
 
