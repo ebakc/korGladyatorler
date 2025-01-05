@@ -3,6 +3,7 @@ package com.example.korgladyatorler;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowManager;
@@ -10,7 +11,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -20,110 +23,71 @@ import java.util.Random;
 
 public class gameActivity extends AppCompatActivity {
 
-    // UI Elemanlarını tanımla
-    private ImageButton oyuncu1Kilic, oyuncu1Asa, oyuncu1Kalkan, oyuncu2Kilic, oyuncu2Asa, oyuncu2Kalkan, itemsecButton;
-    private TextView oyuncu1Hp, oyuncu2Hp, hpText;
-    private ImageView oyuncu1Zar, oyuncu2Zar, oyuncu1Char, oyuncu2Char;
-
-    private ArrayList<String> kiliclar, asalar, kalkanlar;
-    private Random random = new Random();
-
-    private boolean oyuncu1SecimYapti = false, oyuncu2SecimYapti = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-
-        // UI elemanlarını tanımla
-        uiElemanlariTanimla();
-
-        // Tam ekran ve sistem UI gizle
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        hideSystemUI();
-
-        // Item listelerini oluştur
-        itemListeleriTanimla();
-
-        // Rastgele item seçme
-        rastgeleItemSec();
-
-        // Butonlara tıklama olayları
-        itemsecButton.setOnClickListener(v -> rastgeleItemSec());
-        setItemClickListeners();
-
-        // Window insets ayarları
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            v.setPadding(insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).right,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
-            return insets;
-        });
-    }
-
-    // UI elemanlarını tanımla
-    private void uiElemanlariTanimla() {
+    private void uiElemanlariTanimlama() {
         oyuncu1Kilic = findViewById(R.id.oyuncu1Kilic);
         oyuncu1Asa = findViewById(R.id.oyuncu1Asa);
         oyuncu1Kalkan = findViewById(R.id.oyuncu1Kalkan);
+
         oyuncu2Kilic = findViewById(R.id.oyuncu2Kilic);
         oyuncu2Asa = findViewById(R.id.oyuncu2Asa);
         oyuncu2Kalkan = findViewById(R.id.oyuncu2Kalkan);
+
         oyuncu1Hp = findViewById(R.id.oyuncu1Hp);
         oyuncu2Hp = findViewById(R.id.oyuncu2Hp);
         hpText = findViewById(R.id.hpText);
+
         itemsecButton = findViewById(R.id.itemsecButton);
+
+        // Zarların tanımlanması
         oyuncu1Zar = findViewById(R.id.oyuncu1Zar);
         oyuncu2Zar = findViewById(R.id.oyuncu2Zar);
+
         oyuncu1Char = findViewById(R.id.oyuncu1Char);
         oyuncu2Char = findViewById(R.id.oyuncu2Char);
     }
 
-    // Item listelerini oluştur
-    private void itemListeleriTanimla() {
-        kiliclar = new ArrayList<>();
-        asalar = new ArrayList<>();
-        kalkanlar = new ArrayList<>();
+    private ImageButton oyuncu1Kilic, oyuncu1Asa, oyuncu1Kalkan;
+    private ImageButton oyuncu2Kilic, oyuncu2Asa, oyuncu2Kalkan;
+    private TextView oyuncu1Hp, oyuncu2Hp, hpText;
+    private ImageButton itemsecButton;
+    private ImageView oyuncu1Zar, oyuncu2Zar, oyuncu1Char, oyuncu2Char;
 
-        Collections.addAll(kiliclar, "id01_a_kilic_kritikseven", "id02_b_kilic_dengesizkesen", "id03_b_kilic_kahkahalicelik",
-                "id04_c_kilic_paslidovuscu", "id05_c_kilic_topal", "id06_c_kilic_garipyarmac");
+    private ArrayList<String> kiliclar;
+    private ArrayList<String> asalar;
+    private ArrayList<String> kalkanlar;
+    private Random random;
 
-        Collections.addAll(asalar, "id07_a_asa_simsekyoldasi", "id08_b_asa_dengesizparlayan", "id09_b_asa_dogaefsunu",
-                "id10_c_asa_catlakahsap", "id11_c_asa_titrekalev", "id12_c_asa_garipfisilti");
+    private boolean oyuncu1SecimYapti = false;
+    private boolean oyuncu2SecimYapti = false;
+    int oyuncu1Can=100;
+    int oyuncu2Can=100;
+    private int oyuncu1Hasar; // Oyuncu 1'in hasarını saklamak için
+    private int oyuncu2Hasar; // Oyuncu 2'nin hasarını saklamak için
 
-        Collections.addAll(kalkanlar, "id13_a_kalkan_kaderkoruyucusu", "id14_b_kalkan_yaraligardiyan", "id15_b_kalkan_dengesizdefans",
-                "id16_c_kalkan_egribugru", "id17_c_kalkan_delikdesik", "id18_c_kalkan_ahsapharabe");
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
 
-    // Rastgele item seçme
-    private void rastgeleItemSec() {
-        Collections.shuffle(kiliclar);
-        Collections.shuffle(asalar);
-        Collections.shuffle(kalkanlar);
+        // Tam ekran moduna geçiş
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Itemları atan ve görünür hale getiren işlemler
-        oyuncu1Kilic.setImageResource(getResources().getIdentifier(kiliclar.get(0), "drawable", getPackageName()));
-        oyuncu1Asa.setImageResource(getResources().getIdentifier(asalar.get(0), "drawable", getPackageName()));
-        oyuncu1Kalkan.setImageResource(getResources().getIdentifier(kalkanlar.get(0), "drawable", getPackageName()));
-        oyuncu2Kilic.setImageResource(getResources().getIdentifier(kiliclar.get(1), "drawable", getPackageName()));
-        oyuncu2Asa.setImageResource(getResources().getIdentifier(asalar.get(1), "drawable", getPackageName()));
-        oyuncu2Kalkan.setImageResource(getResources().getIdentifier(kalkanlar.get(1), "drawable", getPackageName()));
+        // Navigasyon çubuğunu gizleme
+        hideSystemUI();
 
-        oyuncu1Kilic.setVisibility(View.VISIBLE);
-        oyuncu1Asa.setVisibility(View.VISIBLE);
-        oyuncu1Kalkan.setVisibility(View.VISIBLE);
-        oyuncu2Kilic.setVisibility(View.VISIBLE);
-        oyuncu2Asa.setVisibility(View.VISIBLE);
-        oyuncu2Kalkan.setVisibility(View.VISIBLE);
-        oyuncu1Hp.setVisibility(View.VISIBLE);
-        oyuncu2Hp.setVisibility(View.VISIBLE);
-        hpText.setVisibility(View.VISIBLE);
-        itemsecButton.setVisibility(View.INVISIBLE);
-    }
+        setContentView(R.layout.activity_game);
 
-    // Item butonlarına tıklama olaylarını ayarla
-    private void setItemClickListeners() {
+        uiElemanlariTanimlama();
+
+        itemListeleriTanimlama();
+
+        rastgeleItemSec();
+
+
+
+        random = new Random(); // Random sınıfını tanımla
+
+        // Item butonlarına tıklama işlemi ekle
         oyuncu1Kilic.setOnClickListener(v -> zarAt(1));
         oyuncu1Asa.setOnClickListener(v -> zarAt(1));
         oyuncu1Kalkan.setOnClickListener(v -> zarAt(1));
@@ -131,62 +95,249 @@ public class gameActivity extends AppCompatActivity {
         oyuncu2Kilic.setOnClickListener(v -> zarAt(2));
         oyuncu2Asa.setOnClickListener(v -> zarAt(2));
         oyuncu2Kalkan.setOnClickListener(v -> zarAt(2));
+
+        // Window insets ayarları
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+
+            return insets;
+        });
     }
 
-    // Zar atma fonksiyonu
+    // Item Listelerini Oluşturma
+    private void itemListeleriTanimlama() {
+        kiliclar = new ArrayList<>();
+        kiliclar.add("id01_a_kilic_kritikseven");
+        kiliclar.add("id02_b_kilic_dengesizkesen");
+        kiliclar.add("id03_b_kilic_kahkahalicelik");
+        kiliclar.add("id04_c_kilic_paslidovuscu");
+        kiliclar.add("id05_c_kilic_topal");
+        kiliclar.add("id06_c_kilic_garipyarmac");
+
+        asalar = new ArrayList<>();
+        asalar.add("id07_a_asa_simsekyoldasi");
+        asalar.add("id08_b_asa_dengesizparlayan");
+        asalar.add("id09_b_asa_dogaefsunu");
+        asalar.add("id10_c_asa_catlakahsap");
+        asalar.add("id11_c_asa_titrekalev");
+        asalar.add("id12_c_asa_garipfisilti");
+
+        kalkanlar = new ArrayList<>();
+        kalkanlar.add("id13_a_kalkan_kaderkoruyucusu");
+        kalkanlar.add("id14_b_kalkan_yaraligardiyan");
+        kalkanlar.add("id15_b_kalkan_dengesizdefans");
+        kalkanlar.add("id16_c_kalkan_egribugru");
+        kalkanlar.add("id17_c_kalkan_delikdesik");
+        kalkanlar.add("id18_c_kalkan_ahsapharabe");
+    }
+
+    // Buton Tıklama Olayını Yönetme
+    private void rastgeleItemSec() {
+        itemsecButton.setOnClickListener(v -> {
+            // Listeleri karıştırma
+            Collections.shuffle(kiliclar);
+            Collections.shuffle(asalar);
+            Collections.shuffle(kalkanlar);
+
+            // Itemları rastgele atama
+            String kilic1 = kiliclar.get(0);
+            String asa1 = asalar.get(0);
+            String kalkan1 = kalkanlar.get(0);
+
+            String kilic2 = kiliclar.get(1);
+            String asa2 = asalar.get(1);
+            String kalkan2 = kalkanlar.get(1);
+
+            // İtemlerin görünmesini sağlama
+            oyuncu1Kilic.setVisibility(View.VISIBLE);
+            oyuncu1Asa.setVisibility(View.VISIBLE);
+            oyuncu1Kalkan.setVisibility(View.VISIBLE);
+            oyuncu2Kilic.setVisibility(View.VISIBLE);
+            oyuncu2Asa.setVisibility(View.VISIBLE);
+            oyuncu2Kalkan.setVisibility(View.VISIBLE);
+            oyuncu1Hp.setVisibility(View.VISIBLE);
+            oyuncu2Hp.setVisibility(View.VISIBLE);
+            hpText.setVisibility(View.VISIBLE);
+            itemsecButton.setVisibility(View.INVISIBLE);
+
+            // Resimleri değiştirme
+            oyuncu1Kilic.setImageResource(getResources().getIdentifier(kilic1, "drawable", getPackageName()));
+            oyuncu1Asa.setImageResource(getResources().getIdentifier(asa1, "drawable", getPackageName()));
+            oyuncu1Kalkan.setImageResource(getResources().getIdentifier(kalkan1, "drawable", getPackageName()));
+
+            oyuncu2Kilic.setImageResource(getResources().getIdentifier(kilic2, "drawable", getPackageName()));
+            oyuncu2Asa.setImageResource(getResources().getIdentifier(asa2, "drawable", getPackageName()));
+            oyuncu2Kalkan.setImageResource(getResources().getIdentifier(kalkan2, "drawable", getPackageName()));
+
+            // Kılıç butonlarının tag'lerini ayarlama
+            oyuncu1Kilic.setTag(kilic1);
+            oyuncu1Asa.setTag(asa1);
+            oyuncu1Kalkan.setTag(kalkan1);
+
+            oyuncu2Kilic.setTag(kilic2);
+            oyuncu2Asa.setTag(asa2);
+            oyuncu2Kalkan.setTag(kalkan2);
+        });
+    }
+
     private void zarAt(int oyuncu) {
-        int zarDegeri = random.nextInt(6) + 1;
-        ImageView zar = oyuncu == 1 ? oyuncu1Zar : oyuncu2Zar;
-        ImageButton kilic = oyuncu == 1 ? oyuncu1Kilic : oyuncu2Kilic;
-        ImageButton asa = oyuncu == 1 ? oyuncu1Asa : oyuncu2Asa;
-        ImageButton kalkan = oyuncu == 1 ? oyuncu1Kalkan : oyuncu2Kalkan;
-        ImageView charImage = oyuncu == 1 ? oyuncu1Char : oyuncu2Char;
+        // Zar atma işlemleri
+        int zarDegeri = random.nextInt(3) + 1; // Zar değeri 1-3 arasında
 
-        zar.setVisibility(View.INVISIBLE);
-        zar.setImageResource(getZarResId(zarDegeri));
-
-        // Item butonlarını gizle ve karakter fotoğrafını değiştir
-        kilic.setVisibility(View.INVISIBLE);
-        asa.setVisibility(View.INVISIBLE);
-        kalkan.setVisibility(View.INVISIBLE);
-        charImage.setImageResource(R.drawable.char_attack);
-
+        // Animasyonu başlat ve resimleri değiştir
         if (oyuncu == 1) {
+            // Oyuncu 1'in zarını at
+            oyuncu1Zar.setVisibility(View.INVISIBLE); // Zar ilk başta görünmesin
+            oyuncu1Zar.setImageResource(getZarResId(zarDegeri));
+
+            // Oyuncu 1'in item butonlarını gizle
+            oyuncu1Kilic.setVisibility(View.INVISIBLE);
+            oyuncu1Asa.setVisibility(View.INVISIBLE);
+            oyuncu1Kalkan.setVisibility(View.INVISIBLE);
             oyuncu1SecimYapti = true;
+
+            // Karakter fotoğrafını değiştir (saldırı fotoğrafı)
+            oyuncu1Char.setImageResource(R.drawable.char_attack); // char_attack, saldırı fotoğrafınız
+
+            // Kılıç hasar hesaplamayı burada başlatıyoruz
+            oyuncu1Hasar = kilicHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar değerini al
+
         } else {
+            // Oyuncu 2'nin zarını at
+            oyuncu2Zar.setVisibility(View.INVISIBLE); // Zar ilk başta görünmesin
+            oyuncu2Zar.setImageResource(getZarResId(zarDegeri));
+
+            // Oyuncu 2'nin item butonlarını gizle
+            oyuncu2Kilic.setVisibility(View.INVISIBLE);
+            oyuncu2Asa.setVisibility(View.INVISIBLE);
+            oyuncu2Kalkan.setVisibility(View.INVISIBLE);
             oyuncu2SecimYapti = true;
+
+            // Karakter fotoğrafını değiştir (saldırı fotoğrafı)
+            oyuncu2Char.setImageResource(R.drawable.char_attack); // char_attack, saldırı fotoğrafınız
+
+            // Kılıç hasar hesaplamayı burada başlatıyoruz
+            oyuncu2Hasar = kilicHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar değerini al
         }
 
-        // Her iki oyuncu da zar atarsa işlemleri tamamla
+        // Her iki oyuncu da zar atarsa
         if (oyuncu1SecimYapti && oyuncu2SecimYapti) {
+            // 1 saniye bekleyip hasarları güncelle
             new Handler().postDelayed(() -> {
-                // Karakter fotoğraflarını geri al ve butonları göster
-                oyuncu1Char.setImageResource(R.drawable.char_stand);
-                oyuncu2Char.setImageResource(R.drawable.char_stand);
+                // Oyuncu 1'in hasarını Oyuncu 2'ye uygula
+                oyuncu2Can -= oyuncu1Hasar;
+                if (oyuncu2Hp != null) {
+                    Log.d("Hasar Hesapla", "Oyuncu 2 HP: " + oyuncu2Can);
+                    oyuncu2Hp.setText("HP: " + oyuncu2Can); // Oyuncu 2'nin HP'sini TextView'e yazma
+                }
+
+                // Oyuncu 2'nin hasarını Oyuncu 1'e uygula
+                oyuncu1Can -= oyuncu2Hasar;
+                if (oyuncu1Hp != null) {
+                    Log.d("Hasar Hesapla", "Oyuncu 1 HP: " + oyuncu1Can);
+                    oyuncu1Hp.setText("HP: " + oyuncu1Can); // Oyuncu 1'in HP'sini TextView'e yazma
+                }
+
+                // Karakter fotoğraflarını geri çevir (char_stand)
+                oyuncu1Char.setImageResource(R.drawable.char_stand); // char_stand, duruş fotoğrafınız
+                oyuncu2Char.setImageResource(R.drawable.char_stand); // char_stand, duruş fotoğrafınız
+
+                // Zarları görünür yap
                 oyuncu1Zar.setVisibility(View.VISIBLE);
                 oyuncu2Zar.setVisibility(View.VISIBLE);
+
+                // Oyuncu 1'in kılıç butonunu görünür hale getir
                 oyuncu1Kilic.setVisibility(View.VISIBLE);
+                // Oyuncu 2'nin kılıç butonunu görünür hale getir
+                oyuncu2Kilic.setVisibility(View.VISIBLE);
+                // Diğer item butonlarını da görünür hale getirin
                 oyuncu1Asa.setVisibility(View.VISIBLE);
                 oyuncu1Kalkan.setVisibility(View.VISIBLE);
-                oyuncu2Kilic.setVisibility(View.VISIBLE);
                 oyuncu2Asa.setVisibility(View.VISIBLE);
                 oyuncu2Kalkan.setVisibility(View.VISIBLE);
 
-                // Seçim durumunu sıfırla
+                // Her iki oyuncunun butonlarını tekrar aktif hale getir
                 oyuncu1SecimYapti = false;
                 oyuncu2SecimYapti = false;
-            }, 1000);
+            }, 1000); // 1 saniye bekleme
         }
     }
 
-    // Zar görselini döndür
+
+    private int kilicHasarHesapla(int oyuncu, int zarDegeri) {
+        int hasar = 0;
+
+        // Seçilen kılıcın id'sini belirleyelim
+        ImageButton kilic = oyuncu == 1 ? oyuncu1Kilic : oyuncu2Kilic;
+
+        // Kilic'ten id'yi alırken null kontrolü ekliyoruz
+        String kilicId = kilic.getTag() != null ? kilic.getTag().toString() : "";
+
+        // Eğer kilicId boşsa, hata mesajı verelim ve metodu sonlandıralım
+        if (kilicId.isEmpty()) {
+            Log.e("Kılıç Hata", "Kılıç ID'si null veya boş. Kılıç seçilmedi.");
+            return 0; // Kılıç seçilmediği için 0 hasar döndür
+        }
+
+        // Hasar hesaplama
+        switch (kilicId) {
+            case "id01_a_kilic_kritikseven":  // A Seviye Kılıç
+                if (zarDegeri == 1) {
+                    hasar = 27;
+                } else if (zarDegeri == 2) {
+                    hasar = 30;
+                } else if (zarDegeri == 3) {
+                    hasar = 35;
+                }
+                break;
+            case "id02_b_kilic_dengesizkesen":  // B Seviye Kılıç (1)
+            case "id03_b_kilic_kahkahalicelik": // B Seviye Kılıç (2)
+                if (zarDegeri == 1) {
+                    hasar = 13;
+                } else if (zarDegeri == 2) {
+                    hasar = 18;
+                } else if (zarDegeri == 3) {
+                    hasar = 23;
+                }
+                break;
+            case "id04_c_kilic_paslidovuscu":  // C Seviye Kılıç (1)
+            case "id05_c_kilic_topal":         // C Seviye Kılıç (2)
+            case "id06_c_kilic_garipyarmac":   // C Seviye Kılıç (3)
+                if (zarDegeri == 1) {
+                    hasar = 5;
+                } else if (zarDegeri == 2) {
+                    hasar = 10;
+                } else if (zarDegeri == 3) {
+                    hasar = 15;
+                }
+                break;
+            default:
+                hasar = 0; // Geçersiz kılıç durumu
+                break;
+        }
+
+        return hasar; // Hesaplanan hasar değerini döndür
+    }
+
+
+
+
+
+    // Zar görseli ID'sini döner
     private int getZarResId(int zarDegeri) {
         switch (zarDegeri) {
             case 1: return R.drawable.zar1;
-            case 2: return R.drawable.zar3;
-            case 3: return R.drawable.zar6;
+            case 2: return R.drawable.zar2;
+            case 3: return R.drawable.zar3;
             default: return R.drawable.zar1;
         }
+    }
+
+    // Zar atma aralığını rastgele belirle
+    private int getZarAraligi(int oyuncu) {
+        // Rastgele bir değer döndür
+        return random.nextInt(3) + 1; // 1-3 aralığında rastgele bir sayı döner
     }
 
     // Sistem arayüzünü gizle
