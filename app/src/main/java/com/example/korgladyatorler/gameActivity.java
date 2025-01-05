@@ -24,6 +24,7 @@ import java.util.Random;
 public class gameActivity extends AppCompatActivity {
 
     private void uiElemanlariTanimlama() {
+        // Diğer UI elemanlarını tanımlama
         oyuncu1Kilic = findViewById(R.id.oyuncu1Kilic);
         oyuncu1Asa = findViewById(R.id.oyuncu1Asa);
         oyuncu1Kalkan = findViewById(R.id.oyuncu1Kalkan);
@@ -34,7 +35,6 @@ public class gameActivity extends AppCompatActivity {
 
         oyuncu1Hp = findViewById(R.id.oyuncu1Hp);
         oyuncu2Hp = findViewById(R.id.oyuncu2Hp);
-        hpText = findViewById(R.id.hpText);
 
         itemsecButton = findViewById(R.id.itemsecButton);
 
@@ -44,12 +44,20 @@ public class gameActivity extends AppCompatActivity {
 
         oyuncu1Char = findViewById(R.id.oyuncu1Char);
         oyuncu2Char = findViewById(R.id.oyuncu2Char);
+
+        // Yeniden başlatma butonunu tanımlama
+        yenidenButton = findViewById(R.id.yenidenButton);
+
+        // Kazanan TextView'i tanımlayın
+        kazananText = findViewById(R.id.kazananText);
     }
 
     private ImageButton oyuncu1Kilic, oyuncu1Asa, oyuncu1Kalkan;
     private ImageButton oyuncu2Kilic, oyuncu2Asa, oyuncu2Kalkan;
-    private TextView oyuncu1Hp, oyuncu2Hp, hpText;
+    private TextView oyuncu1Hp, oyuncu2Hp;
     private ImageButton itemsecButton;
+    private ImageButton yenidenButton; // Yeniden başlatma butonu
+    private TextView kazananText;
     private ImageView oyuncu1Zar, oyuncu2Zar, oyuncu1Char, oyuncu2Char;
 
     private ArrayList<String> kiliclar;
@@ -85,6 +93,8 @@ public class gameActivity extends AppCompatActivity {
 
         random = new Random(); // Random sınıfını tanımla
 
+        yenidenButton.setOnClickListener(v -> yenidenBaslat());
+
         // Item butonlarına tıklama işlemi ekle
         oyuncu1Kilic.setOnClickListener(v -> zarAt(1, false, false)); // Kılıç kullanımı
         oyuncu1Asa.setOnClickListener(v -> zarAt(1, true, false));  // Asa kullanımı
@@ -94,6 +104,8 @@ public class gameActivity extends AppCompatActivity {
         oyuncu2Asa.setOnClickListener(v -> zarAt(2, true, false));  // Asa kullanımı
         oyuncu2Kalkan.setOnClickListener(v -> zarAt(2, false, true)); // Kalkan kullanımı
 
+        yenidenButton.setOnClickListener(v -> yenidenBaslat());
+
         // Window insets ayarları
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -101,6 +113,11 @@ public class gameActivity extends AppCompatActivity {
 
             return insets;
         });
+    }
+
+    private void yenidenBaslat() {
+        // Activity'yi yeniden başlat
+        recreate();
     }
 
     // Item Listelerini Oluşturma
@@ -156,7 +173,6 @@ public class gameActivity extends AppCompatActivity {
             oyuncu2Kalkan.setVisibility(View.VISIBLE);
             oyuncu1Hp.setVisibility(View.VISIBLE);
             oyuncu2Hp.setVisibility(View.VISIBLE);
-            hpText.setVisibility(View.VISIBLE);
             itemsecButton.setVisibility(View.INVISIBLE);
 
             // Resimleri değiştirme
@@ -265,6 +281,29 @@ public class gameActivity extends AppCompatActivity {
                 if (oyuncu1Hp != null) {
                     Log.d("Hasar Hesapla", "Oyuncu 1 HP: " + oyuncu1Can);
                     oyuncu1Hp.setText("HP: " + oyuncu1Can); // Oyuncu 1'in HP'sini TextView'e yazma
+                }
+
+                // Oyun bitiş kontrolü
+                if (oyuncu1Can <= 0) {
+                    // Oyuncu 1 kaybetti
+                    kazananText.setText("Oyuncu 2 Kazandı!");
+                    kazananText.setVisibility(View.VISIBLE);
+                    oyuncu1Hp.setVisibility(View.INVISIBLE);
+                    oyuncu1Char.setVisibility(View.INVISIBLE);
+                    oyuncu1Kilic.setVisibility(View.INVISIBLE);
+                    oyuncu1Asa.setVisibility(View.INVISIBLE);
+                    oyuncu1Kalkan.setVisibility(View.INVISIBLE);
+                    yenidenButton.setVisibility(View.VISIBLE); // Yeniden başlatma butonunu görünür yap
+                } else if (oyuncu2Can <= 0) {
+                    // Oyuncu 2 kaybetti
+                    kazananText.setText("Oyuncu 1 Kazandı!");
+                    kazananText.setVisibility(View.VISIBLE);
+                    oyuncu2Hp.setVisibility(View.INVISIBLE);
+                    oyuncu2Char.setVisibility(View.INVISIBLE);
+                    oyuncu2Kilic.setVisibility(View.INVISIBLE);
+                    oyuncu2Asa.setVisibility(View.INVISIBLE);
+                    oyuncu2Kalkan.setVisibility(View.INVISIBLE);
+                    yenidenButton.setVisibility(View.VISIBLE); // Yeniden başlatma butonunu görünür yap
                 }
 
                 // Karakter fotoğraflarını geri çevir (char_stand)

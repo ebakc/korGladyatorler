@@ -39,6 +39,22 @@
             app:layout_constraintVertical_bias="0.050000012" />
 
         <TextView
+            android:id="@+id/kazananText"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:text="Kazanan"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.164" />
+
+        <TextView
             android:id="@+id/oyuncu2Id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="100"
+            android:text="HP: 100"
             android:textColor="@color/black"
             android:textSize="35sp"
             android:visibility="gone"
@@ -101,29 +117,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="100"
+            android:text="HP: 100"
             android:textColor="@color/black"
             android:textSize="35sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.715"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <TextView
-            android:id="@+id/hpText"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/alagard"
-            android:text="HP"
-            android:textColor="@color/black"
-            android:textSize="35sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
             app:layout_constraintVertical_bias="1.0" />
@@ -140,6 +140,20 @@
             app:layout_constraintTop_toTopOf="@+id/background"
             app:layout_constraintVertical_bias="0.307"
             app:srcCompat="@drawable/item_button" />
+
+        <ImageButton
+            android:id="@+id/yenidenButton"
+            android:visibility="gone"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.498"
+            app:srcCompat="@drawable/yeniden_button" />
 
         <ImageButton
             android:id="@+id/oyuncu1Kilic"
