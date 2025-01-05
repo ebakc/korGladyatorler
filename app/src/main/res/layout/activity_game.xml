@@ -55,7 +55,7 @@
 
         <ImageView
             android:id="@+id/oyuncu1Char"
-            android:layout_width="184dp"
+            android:layout_width="234dp"
             android:layout_height="234dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +68,7 @@
 
         <ImageView
             android:id="@+id/oyuncu2Char"
-            android:layout_width="184dp"
+            android:layout_width="234dp"
             android:layout_height="234dp"
             android:scaleType="centerCrop"
             android:scaleX="-1"
@@ -82,13 +82,13 @@
 
         <TextView
             android:id="@+id/oyuncu1Hp"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="-100-"
+            android:text="100"
             android:textColor="@color/black"
             android:textSize="35sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.284"
@@ -98,13 +98,13 @@
 
         <TextView
             android:id="@+id/oyuncu2Hp"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="-100-"
+            android:text="100"
             android:textColor="@color/black"
             android:textSize="35sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.715"
@@ -230,6 +230,32 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.194"
             app:srcCompat="@drawable/id13_a_kalkan_kaderkoruyucusu" />
+
+        <ImageView
+            android:id="@+id/oyuncu1Zar"
+            android:visibility="gone"
+            android:layout_width="200px"
+            android:layout_height="200px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.75"
+            app:srcCompat="@drawable/zar1" />
+
+        <ImageView
+            android:id="@+id/oyuncu2Zar"
+            android:visibility="gone"
+            android:layout_width="200px"
+            android:layout_height="200px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.75"
+            app:srcCompat="@drawable/zar1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
