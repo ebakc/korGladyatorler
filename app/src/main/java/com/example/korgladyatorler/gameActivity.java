@@ -83,18 +83,16 @@ public class gameActivity extends AppCompatActivity {
 
         rastgeleItemSec();
 
-
-
         random = new Random(); // Random sınıfını tanımla
 
         // Item butonlarına tıklama işlemi ekle
-        oyuncu1Kilic.setOnClickListener(v -> zarAt(1));
-        oyuncu1Asa.setOnClickListener(v -> zarAt(1));
-        oyuncu1Kalkan.setOnClickListener(v -> zarAt(1));
+        oyuncu1Kilic.setOnClickListener(v -> zarAt(1, false)); // Kılıç kullanımı
+        oyuncu1Asa.setOnClickListener(v -> zarAt(1, true));  // Asa kullanımı
+        oyuncu1Kalkan.setOnClickListener(v -> zarAt(1, false)); // Kalkan kullanımı
 
-        oyuncu2Kilic.setOnClickListener(v -> zarAt(2));
-        oyuncu2Asa.setOnClickListener(v -> zarAt(2));
-        oyuncu2Kalkan.setOnClickListener(v -> zarAt(2));
+        oyuncu2Kilic.setOnClickListener(v -> zarAt(2, false)); // Kılıç kullanımı
+        oyuncu2Asa.setOnClickListener(v -> zarAt(2, true));  // Asa kullanımı
+        oyuncu2Kalkan.setOnClickListener(v -> zarAt(2, false)); // Kalkan kullanımı
 
         // Window insets ayarları
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -181,7 +179,7 @@ public class gameActivity extends AppCompatActivity {
         });
     }
 
-    private void zarAt(int oyuncu) {
+    private void zarAt(int oyuncu, boolean asaKullaniliyor) {
         // Zar atma işlemleri
         int zarDegeri = random.nextInt(3) + 1; // Zar değeri 1-3 arasında
 
@@ -200,8 +198,15 @@ public class gameActivity extends AppCompatActivity {
             // Karakter fotoğrafını değiştir (saldırı fotoğrafı)
             oyuncu1Char.setImageResource(R.drawable.char_attack); // char_attack, saldırı fotoğrafınız
 
-            // Kılıç hasar hesaplamayı burada başlatıyoruz
-            oyuncu1Hasar = kilicHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar değerini al
+            if (asaKullaniliyor) {
+                // Asa hasar hesaplamayı burada başlatıyoruz
+                int[] asaSonuc = asaHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar ve can yenileme değerini al
+                oyuncu1Hasar = asaSonuc[0]; // Oyuncu 1'in hasarını sakla
+                oyuncu1Can += asaSonuc[1]; // Oyuncu 1'in canını yenile
+            } else {
+                // Kılıç hasar hesaplamayı burada başlatıyoruz
+                oyuncu1Hasar = kilicHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar değerini al
+            }
 
         } else {
             // Oyuncu 2'nin zarını at
@@ -217,8 +222,15 @@ public class gameActivity extends AppCompatActivity {
             // Karakter fotoğrafını değiştir (saldırı fotoğrafı)
             oyuncu2Char.setImageResource(R.drawable.char_attack); // char_attack, saldırı fotoğrafınız
 
-            // Kılıç hasar hesaplamayı burada başlatıyoruz
-            oyuncu2Hasar = kilicHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar değerini al
+            if (asaKullaniliyor) {
+                // Asa hasar hesaplamayı burada başlatıyoruz
+                int[] asaSonuc = asaHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar ve can yenileme değerini al
+                oyuncu2Hasar = asaSonuc[0]; // Oyuncu 2'nin hasarını sakla
+                oyuncu2Can += asaSonuc[1]; // Oyuncu 2'nin canını yenile
+            } else {
+                // Kılıç hasar hesaplamayı burada başlatıyoruz
+                oyuncu2Hasar = kilicHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar değerini al
+            }
         }
 
         // Her iki oyuncu da zar atarsa
@@ -319,6 +331,72 @@ public class gameActivity extends AppCompatActivity {
 
         return hasar; // Hesaplanan hasar değerini döndür
     }
+
+    private int[] asaHasarHesapla(int oyuncu, int zarDegeri) {
+        int hasar = 0;
+        double canYenileme = 0;
+
+        // Seçilen asanın id'sini belirleyelim
+        ImageButton asa = oyuncu == 1 ? oyuncu1Asa : oyuncu2Asa;
+
+        // Asa'dan id'yi alırken null kontrolü ekliyoruz
+        String asaId = asa.getTag() != null ? asa.getTag().toString() : "";
+
+        // Eğer asaId boşsa, hata mesajı verelim ve metodu sonlandıralım
+        if (asaId.isEmpty()) {
+            Log.e("Asa Hata", "Asa ID'si null veya boş. Asa seçilmedi.");
+            return new int[]{0, 0}; // Asa seçilmediği için 0 hasar ve 0 can yenileme döndür
+        }
+
+        // Hasar ve can yenileme hesaplama
+        switch (asaId) {
+            case "id07_a_asa_simsekyoldasi":  // A Seviye Asa
+                if (zarDegeri == 1) {
+                    hasar = 21;
+                    canYenileme = 8.5;
+                } else if (zarDegeri == 2) {
+                    hasar = 23;
+                    canYenileme = 10;
+                } else if (zarDegeri == 3) {
+                    hasar = 25;
+                    canYenileme = 20;
+                }
+                break;
+            case "id08_b_asa_dengesizparlayan": // B Seviye Asa (1)
+            case "id09_b_asa_dogaefsunu":      // B Seviye Asa (2)
+                if (zarDegeri == 1) {
+                    hasar = 10;
+                    canYenileme = 3.3;
+                } else if (zarDegeri == 2) {
+                    hasar = 14;
+                    canYenileme = 5;
+                } else if (zarDegeri == 3) {
+                    hasar = 18;
+                    canYenileme = 7;
+                }
+                break;
+            case "id10_c_asa_catlakahsap":      // C Seviye Asa (1)
+            case "id11_c_asa_titrekalev":       // C Seviye Asa (2)
+            case "id12_c_asa_garipfisilti":     // C Seviye Asa (3)
+                if (zarDegeri == 1) {
+                    hasar = 3;
+                    canYenileme = 1;
+                } else if (zarDegeri == 2) {
+                    hasar = 8;
+                    canYenileme = 2.6;
+                } else if (zarDegeri == 3) {
+                    hasar = 12;
+                    canYenileme = 4.8;
+                }
+                break;
+            default:
+                hasar = 0; // Geçersiz asa durumu
+                break;
+        }
+
+        return new int[]{hasar, (int) canYenileme}; // Hasar ve can yenileme değerini döndür
+    }
+
 
 
 
