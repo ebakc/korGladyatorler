@@ -86,13 +86,13 @@ public class gameActivity extends AppCompatActivity {
         random = new Random(); // Random sınıfını tanımla
 
         // Item butonlarına tıklama işlemi ekle
-        oyuncu1Kilic.setOnClickListener(v -> zarAt(1, false)); // Kılıç kullanımı
-        oyuncu1Asa.setOnClickListener(v -> zarAt(1, true));  // Asa kullanımı
-        oyuncu1Kalkan.setOnClickListener(v -> zarAt(1, false)); // Kalkan kullanımı
+        oyuncu1Kilic.setOnClickListener(v -> zarAt(1, false, false)); // Kılıç kullanımı
+        oyuncu1Asa.setOnClickListener(v -> zarAt(1, true, false));  // Asa kullanımı
+        oyuncu1Kalkan.setOnClickListener(v -> zarAt(1, false, true)); // Kalkan kullanımı
 
-        oyuncu2Kilic.setOnClickListener(v -> zarAt(2, false)); // Kılıç kullanımı
-        oyuncu2Asa.setOnClickListener(v -> zarAt(2, true));  // Asa kullanımı
-        oyuncu2Kalkan.setOnClickListener(v -> zarAt(2, false)); // Kalkan kullanımı
+        oyuncu2Kilic.setOnClickListener(v -> zarAt(2, false, false)); // Kılıç kullanımı
+        oyuncu2Asa.setOnClickListener(v -> zarAt(2, true, false));  // Asa kullanımı
+        oyuncu2Kalkan.setOnClickListener(v -> zarAt(2, false, true)); // Kalkan kullanımı
 
         // Window insets ayarları
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -179,7 +179,7 @@ public class gameActivity extends AppCompatActivity {
         });
     }
 
-    private void zarAt(int oyuncu, boolean asaKullaniliyor) {
+    private void zarAt(int oyuncu, boolean asaKullaniliyor, boolean kalkanKullaniliyor) {
         // Zar atma işlemleri
         int zarDegeri = random.nextInt(3) + 1; // Zar değeri 1-3 arasında
 
@@ -203,6 +203,12 @@ public class gameActivity extends AppCompatActivity {
                 int[] asaSonuc = asaHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar ve can yenileme değerini al
                 oyuncu1Hasar = asaSonuc[0]; // Oyuncu 1'in hasarını sakla
                 oyuncu1Can += asaSonuc[1]; // Oyuncu 1'in canını yenile
+            } else if (kalkanKullaniliyor) {
+                // Kalkan kullanımı
+                // Kalkanın koruma değerini hesapla
+                int koruma = kalkanKorumaHesapla(1, zarDegeri); // Oyuncu 1 için kalkan korumasını hesapla
+                // Kalkan kullanıldığında hasar 0 olmalı
+                oyuncu1Hasar = 0; // Oyuncu 1 hasar vermiyor, sadece kalkan kullanıyor
             } else {
                 // Kılıç hasar hesaplamayı burada başlatıyoruz
                 oyuncu1Hasar = kilicHasarHesapla(1, zarDegeri); // Oyuncu 1 için hasar değerini al
@@ -227,6 +233,12 @@ public class gameActivity extends AppCompatActivity {
                 int[] asaSonuc = asaHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar ve can yenileme değerini al
                 oyuncu2Hasar = asaSonuc[0]; // Oyuncu 2'nin hasarını sakla
                 oyuncu2Can += asaSonuc[1]; // Oyuncu 2'nin canını yenile
+            } else if (kalkanKullaniliyor) {
+                // Kalkan kullanımı
+                // Kalkanın koruma değerini hesapla
+                int koruma = kalkanKorumaHesapla(2, zarDegeri); // Oyuncu 2 için kalkan korumasını hesapla
+                // Kalkan kullanıldığında hasar 0 olmalı
+                oyuncu2Hasar = 0; // Oyuncu 2 hasar vermiyor, sadece kalkan kullanıyor
             } else {
                 // Kılıç hasar hesaplamayı burada başlatıyoruz
                 oyuncu2Hasar = kilicHasarHesapla(2, zarDegeri); // Oyuncu 2 için hasar değerini al
@@ -238,14 +250,18 @@ public class gameActivity extends AppCompatActivity {
             // 1 saniye bekleyip hasarları güncelle
             new Handler().postDelayed(() -> {
                 // Oyuncu 1'in hasarını Oyuncu 2'ye uygula
-                oyuncu2Can -= oyuncu1Hasar;
+                int koruma1 = kalkanKorumaHesapla(2, zarDegeri); // Oyuncu 2'nin kalkan korumasını hesapla
+                oyuncu2Can -= Math.max(0, oyuncu1Hasar - koruma1); // Kalkan korumasını hasardan çıkar
+
                 if (oyuncu2Hp != null) {
                     Log.d("Hasar Hesapla", "Oyuncu 2 HP: " + oyuncu2Can);
                     oyuncu2Hp.setText("HP: " + oyuncu2Can); // Oyuncu 2'nin HP'sini TextView'e yazma
                 }
 
                 // Oyuncu 2'nin hasarını Oyuncu 1'e uygula
-                oyuncu1Can -= oyuncu2Hasar;
+                int koruma2 = kalkanKorumaHesapla(1, zarDegeri); // Oyuncu 1'in kalkan korumasını hesapla
+                oyuncu1Can -= Math.max(0, oyuncu2Hasar - koruma2); // Kalkan korumasını hasardan çıkar
+
                 if (oyuncu1Hp != null) {
                     Log.d("Hasar Hesapla", "Oyuncu 1 HP: " + oyuncu1Can);
                     oyuncu1Hp.setText("HP: " + oyuncu1Can); // Oyuncu 1'in HP'sini TextView'e yazma
@@ -275,6 +291,7 @@ public class gameActivity extends AppCompatActivity {
             }, 1000); // 1 saniye bekleme
         }
     }
+
 
 
     private int kilicHasarHesapla(int oyuncu, int zarDegeri) {
@@ -397,7 +414,61 @@ public class gameActivity extends AppCompatActivity {
         return new int[]{hasar, (int) canYenileme}; // Hasar ve can yenileme değerini döndür
     }
 
+    private int kalkanKorumaHesapla(int oyuncu, int zarDegeri) {
+        int koruma = 0;
 
+        // Seçilen kalkanın id'sini belirleyelim
+        ImageButton kalkan = oyuncu == 1 ? oyuncu1Kalkan : oyuncu2Kalkan;
+
+        // Kalkan'tan id'yi alırken null kontrolü ekliyoruz
+        String kalkanId = kalkan.getTag() != null ? kalkan.getTag().toString() : "";
+
+        // Eğer kalkanId boşsa, hata mesajı verelim ve metodu sonlandıralım
+        if (kalkanId.isEmpty()) {
+            Log.e("Kalkan Hata", "Kalkan ID'si null veya boş. Kalkan seçilmedi.");
+            return 0; // Kalkan seçilmediği için 0 koruma döndür
+        }
+
+        // Koruma hesaplama
+        switch (kalkanId) {
+            case "id13_a_kalkan_kaderkoruyucusu":  // A Seviye Kalkan
+                if (zarDegeri == 1) {
+                    koruma = 30;
+                } else if (zarDegeri == 2) {
+                    koruma = 35;
+                } else if (zarDegeri == 3) {
+                    // Hasar görmez, 10 can yeniler
+                    koruma = Integer.MAX_VALUE; // Sonsuz koruma
+                }
+                break;
+            case "id14_b_kalkan_yaraligardiyan": // B Seviye Kalkan (1)
+            case "id15_b_kalkan_dengesizdefans": // B Seviye Kalkan (2)
+                if (zarDegeri == 1) {
+                    koruma = 13;
+                } else if (zarDegeri == 2) {
+                    koruma = 18;
+                } else if (zarDegeri == 3) {
+                    koruma = 23;
+                }
+                break;
+            case "id16_c_kalkan_egribugru":      // C Seviye Kalkan (1)
+            case "id17_c_kalkan_delikdesik":     // C Seviye Kalkan (2)
+            case "id18_c_kalkan_ahsapharabe":    // C Seviye Kalkan (3)
+                if (zarDegeri == 1) {
+                    koruma = 5;
+                } else if (zarDegeri == 2) {
+                    koruma = 10;
+                } else if (zarDegeri == 3) {
+                    koruma = 15;
+                }
+                break;
+            default:
+                koruma = 0; // Geçersiz kalkan durumu
+                break;
+        }
+
+        return koruma; // Hesaplanan koruma değerini döndür
+    }
 
 
 
