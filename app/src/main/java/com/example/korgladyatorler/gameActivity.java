@@ -267,7 +267,8 @@ public class gameActivity extends AppCompatActivity {
             new Handler().postDelayed(() -> {
                 // Oyuncu 1'in hasarını Oyuncu 2'ye uygula
                 int koruma1 = kalkanKorumaHesapla(2, zarDegeri); // Oyuncu 2'nin kalkan korumasını hesapla
-                oyuncu2Can -= Math.max(0, oyuncu1Hasar - koruma1); // Kalkan korumasını hasardan çıkar
+                int hasarUygula1 = Math.max(0, oyuncu1Hasar - koruma1); // Kalkan korumasını hasardan çıkar
+                oyuncu2Can -= hasarUygula1; // Oyuncu 2'nin canını güncelle
 
                 if (oyuncu2Hp != null) {
                     Log.d("Hasar Hesapla", "Oyuncu 2 HP: " + oyuncu2Can);
@@ -276,7 +277,8 @@ public class gameActivity extends AppCompatActivity {
 
                 // Oyuncu 2'nin hasarını Oyuncu 1'e uygula
                 int koruma2 = kalkanKorumaHesapla(1, zarDegeri); // Oyuncu 1'in kalkan korumasını hesapla
-                oyuncu1Can -= Math.max(0, oyuncu2Hasar - koruma2); // Kalkan korumasını hasardan çıkar
+                int hasarUygula2 = Math.max(0, oyuncu2Hasar - koruma2); // Kalkan korumasını hasardan çıkar
+                oyuncu1Can -= hasarUygula2; // Oyuncu 1'in canını güncelle
 
                 if (oyuncu1Hp != null) {
                     Log.d("Hasar Hesapla", "Oyuncu 1 HP: " + oyuncu1Can);
