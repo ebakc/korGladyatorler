@@ -39,20 +39,24 @@
             app:layout_constraintVertical_bias="0.050000012" />
 
         <TextView
-            android:id="@+id/kazananText"
-            android:visibility="gone"
+            android:id="@+id/istatistikText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="#B3800000"
+            android:elevation="8dp"
             android:fontFamily="@font/alagard"
-            android:text="Kazanan"
-            android:textColor="@color/black"
-            android:textSize="30sp"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.164" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.15" />
 
         <TextView
             android:id="@+id/oyuncu2Id"
@@ -129,7 +133,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageButton
-            android:id="@+id/itemsecButton"
+            android:id="@+id/baslaButton"
             android:layout_width="125dp"
             android:layout_height="50dp"
             android:background="@android:color/transparent"
@@ -137,22 +141,21 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.307"
-            app:srcCompat="@drawable/item_button" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/basla_button" />
 
         <ImageButton
             android:id="@+id/yenidenButton"
-            android:visibility="gone"
             android:layout_width="125dp"
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.498"
+            app:layout_constraintVertical_bias="0.955"
             app:srcCompat="@drawable/yeniden_button" />
 
         <ImageButton

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.KorGladyatorler"
         tools:targetApi="31">
         <activity
+            android:name=".itemSec"
+            android:exported="false" />
+        <activity
             android:name=".gameActivity"
             android:exported="false" />
         <activity
