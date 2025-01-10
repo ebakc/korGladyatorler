@@ -59,6 +59,19 @@
             app:srcCompat="@drawable/basla_button" />
 
         <ImageButton
+            android:id="@+id/nasilOynanirButton"
+            android:layout_width="85dp"
+            android:layout_height="34dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="@+id/background"
+            app:layout_constraintStart_toStartOf="@+id/background"
+            app:layout_constraintTop_toBottomOf="@+id/baslikText"
+            app:layout_constraintVertical_bias="0.842"
+            app:srcCompat="@drawable/nasiloynanir_button" />
+
+        <ImageButton
             android:id="@+id/sesbutton"
             android:layout_width="57dp"
             android:layout_height="59dp"
@@ -71,6 +84,86 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ses_acik" />
+
+        <!-- Nasıl Oynanır Paneli -->
+        <LinearLayout
+            android:id="@+id/nasilOynanirPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_panel"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Kapatma Butonu -->
+            <TextView
+                android:id="@+id/kapatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:fontFamily="@font/alagard"
+                android:text="✕"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <!-- İçerik Container -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Sol Kısım -->
+                <LinearLayout
+                    android:id="@+id/solKisim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="20dp">
+
+                    <TextView
+                        android:id="@+id/bilgiTextSol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alagard"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
+                <!-- Orta Kısım -->
+                <LinearLayout
+                    android:id="@+id/ortaKisim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="20dp">
+
+                    <TextView
+                        android:id="@+id/bilgiTextOrta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alagard"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
+                <!-- Sağ Kısım -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/bilgiTextSag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alagard"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

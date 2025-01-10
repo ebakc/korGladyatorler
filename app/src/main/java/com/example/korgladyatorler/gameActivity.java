@@ -461,35 +461,32 @@ public class gameActivity extends AppCompatActivity {
         Log.d("TurSonu", String.format("Koruma - Oyuncu1: %d, Oyuncu2: %d", oyuncu1Koruma, oyuncu2Koruma));
         Log.d("TurSonu", String.format("Can Yenileme - Oyuncu1: %.1f, Oyuncu2: %.1f", oyuncu1CanYenileme, oyuncu2CanYenileme));
 
-        // Önce hasarları uygula (koruma değerlerini dikkate alarak)
-        if (oyuncu1Hasar > 0 && oyuncu2Koruma != Integer.MAX_VALUE) {
-            int gercekHasar = Math.max(0, oyuncu1Hasar - oyuncu2Koruma);
-            double hasarOncesiCan = oyuncu2Can;
-            oyuncu2Can = Math.max(0, oyuncu2Can - gercekHasar);
-            Log.d("TurSonu", String.format("Oyuncu 2'ye uygulanan hasar: %d (%.1f -> %.1f)", 
-                gercekHasar, hasarOncesiCan, oyuncu2Can));
-        }
-        if (oyuncu2Hasar > 0 && oyuncu1Koruma != Integer.MAX_VALUE) {
-            int gercekHasar = Math.max(0, oyuncu2Hasar - oyuncu1Koruma);
-            double hasarOncesiCan = oyuncu1Can;
-            oyuncu1Can = Math.max(0, oyuncu1Can - gercekHasar);
-            Log.d("TurSonu", String.format("Oyuncu 1'e uygulanan hasar: %d (%.1f -> %.1f)", 
-                gercekHasar, hasarOncesiCan, oyuncu1Can));
+        // İnisiyatif kontrolü - yüksek zar atan önce vurur
+        if (oyuncu1ZarDegeri > oyuncu2ZarDegeri) {
+            // Oyuncu 1 önce vurur
+            hasarUygula(1);
+            if (oyuncu2Can > 0) {
+                hasarUygula(2);
+            }
+        } else if (oyuncu2ZarDegeri > oyuncu1ZarDegeri) {
+            // Oyuncu 2 önce vurur
+            hasarUygula(2);
+            if (oyuncu1Can > 0) {
+                hasarUygula(1);
+            }
+        } else {
+            // Zarlar eşitse, rastgele sıra
+            if (random.nextBoolean()) {
+                hasarUygula(1);
+                if (oyuncu2Can > 0) hasarUygula(2);
+            } else {
+                hasarUygula(2);
+                if (oyuncu1Can > 0) hasarUygula(1);
+            }
         }
 
-        // Sonra can yenileme işlemlerini uygula
-        if (oyuncu1CanYenileme > 0) {
-            double yenilemeOncesiCan = oyuncu1Can;
-            oyuncu1Can = Math.min(BASLANGIC_CAN, oyuncu1Can + oyuncu1CanYenileme);
-            Log.d("TurSonu", String.format("Oyuncu 1 can yeniledi: %.1f -> %.1f (%.1f)", 
-                yenilemeOncesiCan, oyuncu1Can, oyuncu1CanYenileme));
-        }
-        if (oyuncu2CanYenileme > 0) {
-            double yenilemeOncesiCan = oyuncu2Can;
-            oyuncu2Can = Math.min(BASLANGIC_CAN, oyuncu2Can + oyuncu2CanYenileme);
-            Log.d("TurSonu", String.format("Oyuncu 2 can yeniledi: %.1f -> %.1f (%.1f)", 
-                yenilemeOncesiCan, oyuncu2Can, oyuncu2CanYenileme));
-        }
+        // Can yenileme işlemleri
+        canYenilemeUygula();
 
         // Can değerlerini güncelle
         oyuncu1Hp.setText(String.format("HP: %.1f", Math.max(0, oyuncu1Can)));
@@ -550,6 +547,37 @@ public class gameActivity extends AppCompatActivity {
         oyuncu2CanYenileme = 0;
         oyuncu1Koruma = 0;
         oyuncu2Koruma = 0;
+    }
+
+    private void hasarUygula(int vuranOyuncu) {
+        if (vuranOyuncu == 1 && oyuncu1Hasar > 0 && oyuncu2Koruma != Integer.MAX_VALUE) {
+            int gercekHasar = Math.max(0, oyuncu1Hasar - oyuncu2Koruma);
+            double hasarOncesiCan = oyuncu2Can;
+            oyuncu2Can = Math.max(0, oyuncu2Can - gercekHasar);
+            Log.d("TurSonu", String.format("Oyuncu 2'ye uygulanan hasar: %d (%.1f -> %.1f)", 
+                gercekHasar, hasarOncesiCan, oyuncu2Can));
+        } else if (vuranOyuncu == 2 && oyuncu2Hasar > 0 && oyuncu1Koruma != Integer.MAX_VALUE) {
+            int gercekHasar = Math.max(0, oyuncu2Hasar - oyuncu1Koruma);
+            double hasarOncesiCan = oyuncu1Can;
+            oyuncu1Can = Math.max(0, oyuncu1Can - gercekHasar);
+            Log.d("TurSonu", String.format("Oyuncu 1'e uygulanan hasar: %d (%.1f -> %.1f)", 
+                gercekHasar, hasarOncesiCan, oyuncu1Can));
+        }
+    }
+
+    private void canYenilemeUygula() {
+        if (oyuncu1CanYenileme > 0 && oyuncu1Can > 0) {
+            double yenilemeOncesiCan = oyuncu1Can;
+            oyuncu1Can = Math.min(BASLANGIC_CAN, oyuncu1Can + oyuncu1CanYenileme);
+            Log.d("TurSonu", String.format("Oyuncu 1 can yeniledi: %.1f -> %.1f (%.1f)", 
+                yenilemeOncesiCan, oyuncu1Can, oyuncu1CanYenileme));
+        }
+        if (oyuncu2CanYenileme > 0 && oyuncu2Can > 0) {
+            double yenilemeOncesiCan = oyuncu2Can;
+            oyuncu2Can = Math.min(BASLANGIC_CAN, oyuncu2Can + oyuncu2CanYenileme);
+            Log.d("TurSonu", String.format("Oyuncu 2 can yeniledi: %.1f -> %.1f (%.1f)", 
+                yenilemeOncesiCan, oyuncu2Can, oyuncu2CanYenileme));
+        }
     }
 
     private void gosterItemButonlari() {
@@ -624,7 +652,120 @@ public class gameActivity extends AppCompatActivity {
     }
 
     private void oyunBitisKontrolu() {
-        if (oyuncu1Can <= 0 || oyuncu2Can <= 0) {
+        boolean oyunBitti = false;
+        String kazananOyuncu = "";
+        String kazanmaSebebi = "";
+        double oyuncu1SonCan = oyuncu1Can;
+        double oyuncu2SonCan = oyuncu2Can;
+
+        // İki oyuncu da 0'ın altında ise
+        if (oyuncu1Can <= 0 && oyuncu2Can <= 0) {
+            oyunBitti = true;
+            if (oyuncu1Can < oyuncu2Can) {
+                kazananOyuncu = String.format("OYUNCU 2 (HP: %.1f) vs OYUNCU 1 (HP: %.1f)", oyuncu2Can, oyuncu1Can);
+                kazanmaSebebi = "Can miktarına göre kazandı!";
+            } else if (oyuncu2Can < oyuncu1Can) {
+                kazananOyuncu = String.format("OYUNCU 1 (HP: %.1f) vs OYUNCU 2 (HP: %.1f)", oyuncu1Can, oyuncu2Can);
+                kazanmaSebebi = "Can miktarına göre kazandı!";
+            } else {
+                // Eşitlik durumunda zar değerlerine bak
+                if (oyuncu1ZarDegeri > oyuncu2ZarDegeri) {
+                    kazananOyuncu = String.format("OYUNCU 1 (HP: %.1f) vs OYUNCU 2 (HP: %.1f)", oyuncu1Can, oyuncu2Can);
+                    kazanmaSebebi = String.format("Son zar değeri daha yüksek! (%d > %d)", oyuncu1ZarDegeri, oyuncu2ZarDegeri);
+                } else if (oyuncu2ZarDegeri > oyuncu1ZarDegeri) {
+                    kazananOyuncu = String.format("OYUNCU 2 (HP: %.1f) vs OYUNCU 1 (HP: %.1f)", oyuncu2Can, oyuncu1Can);
+                    kazanmaSebebi = String.format("Son zar değeri daha yüksek! (%d > %d)", oyuncu2ZarDegeri, oyuncu1ZarDegeri);
+                } else {
+                    // Zarlar da eşitse rastgele
+                    if (random.nextBoolean()) {
+                        kazananOyuncu = String.format("OYUNCU 1 (HP: %.1f) vs OYUNCU 2 (HP: %.1f)", oyuncu1Can, oyuncu2Can);
+                    } else {
+                        kazananOyuncu = String.format("OYUNCU 2 (HP: %.1f) vs OYUNCU 1 (HP: %.1f)", oyuncu2Can, oyuncu1Can);
+                    }
+                    kazanmaSebebi = "Zarlar eşit olduğu için şans faktörü!";
+                }
+            }
+        }
+        // Sadece biri 0'ın altında ise
+        else if (oyuncu1Can <= 0) {
+            oyunBitti = true;
+            kazananOyuncu = String.format("OYUNCU 2 (HP: %.1f) vs OYUNCU 1 (HP: %.1f)", oyuncu2Can, oyuncu1Can);
+            kazanmaSebebi = "Rakibin canı tükendi!";
+        }
+        else if (oyuncu2Can <= 0) {
+            oyunBitti = true;
+            kazananOyuncu = String.format("OYUNCU 1 (HP: %.1f) vs OYUNCU 2 (HP: %.1f)", oyuncu1Can, oyuncu2Can);
+            kazanmaSebebi = "Rakibin canı tükendi!";
+        }
+
+        if (oyunBitti) {
+            // HP textlerini ve oyuncu ID'lerini gizle
+            oyuncu1Hp.setVisibility(View.INVISIBLE);
+            oyuncu2Hp.setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu1Id).setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu2Id).setVisibility(View.INVISIBLE);
+
+            // Zarları gizle
+            oyuncu1Zar.setVisibility(View.INVISIBLE);
+            oyuncu2Zar.setVisibility(View.INVISIBLE);
+
+            // Karakterleri güncelle ve itemleri yeniden konumlandır
+            if (oyuncu1Can < oyuncu2Can) {
+                // Oyuncu 2 kazandı
+                oyuncu1Char.setVisibility(View.INVISIBLE);
+                oyuncu2Char.setImageResource(R.drawable.char_stand);
+                
+                // Ekran yüksekliğini al
+                int screenHeight = getWindow().getDecorView().getHeight();
+                
+                // Oyuncu 2'nin itemlerini sağ tarafa yerleştir
+                oyuncu2Kilic.setX(getWindow().getDecorView().getWidth() - oyuncu2Kilic.getWidth() - 50);
+                oyuncu2Asa.setX(getWindow().getDecorView().getWidth() - oyuncu2Asa.getWidth() - 50);
+                oyuncu2Kalkan.setX(getWindow().getDecorView().getWidth() - oyuncu2Kalkan.getWidth() - 50);
+                
+                // Y pozisyonlarını ekranın altından yukarı doğru ayarla
+                oyuncu2Kalkan.setY(screenHeight - oyuncu2Kalkan.getHeight() - 50);  // En altta
+                oyuncu2Asa.setY(screenHeight - oyuncu2Kalkan.getHeight() - oyuncu2Asa.getHeight() - 100);  // Ortada
+                oyuncu2Kilic.setY(screenHeight - oyuncu2Kalkan.getHeight() - oyuncu2Asa.getHeight() - oyuncu2Kilic.getHeight() - 150);  // En üstte
+                
+                // Kaybeden oyuncunun itemlerini sol tarafa yerleştir
+                oyuncu1Kilic.setX(50);
+                oyuncu1Asa.setX(50);
+                oyuncu1Kalkan.setX(50);
+                
+                // Aynı Y pozisyonlarını kaybeden için de uygula
+                oyuncu1Kalkan.setY(screenHeight - oyuncu1Kalkan.getHeight() - 50);
+                oyuncu1Asa.setY(screenHeight - oyuncu1Kalkan.getHeight() - oyuncu1Asa.getHeight() - 100);
+                oyuncu1Kilic.setY(screenHeight - oyuncu1Kalkan.getHeight() - oyuncu1Asa.getHeight() - oyuncu1Kilic.getHeight() - 150);
+            } else {
+                // Oyuncu 1 kazandı
+                oyuncu2Char.setVisibility(View.INVISIBLE);
+                oyuncu1Char.setImageResource(R.drawable.char_stand);
+                
+                // Ekran yüksekliğini al
+                int screenHeight = getWindow().getDecorView().getHeight();
+                
+                // Oyuncu 1'in itemlerini sol tarafa yerleştir
+                oyuncu1Kilic.setX(50);
+                oyuncu1Asa.setX(50);
+                oyuncu1Kalkan.setX(50);
+                
+                // Y pozisyonlarını ekranın altından yukarı doğru ayarla
+                oyuncu1Kalkan.setY(screenHeight - oyuncu1Kalkan.getHeight() - 50);  // En altta
+                oyuncu1Asa.setY(screenHeight - oyuncu1Kalkan.getHeight() - oyuncu1Asa.getHeight() - 100);  // Ortada
+                oyuncu1Kilic.setY(screenHeight - oyuncu1Kalkan.getHeight() - oyuncu1Asa.getHeight() - oyuncu1Kilic.getHeight() - 150);  // En üstte
+                
+                // Kaybeden oyuncunun itemlerini sağ tarafa yerleştir
+                oyuncu2Kilic.setX(getWindow().getDecorView().getWidth() - oyuncu2Kilic.getWidth() - 50);
+                oyuncu2Asa.setX(getWindow().getDecorView().getWidth() - oyuncu2Asa.getWidth() - 50);
+                oyuncu2Kalkan.setX(getWindow().getDecorView().getWidth() - oyuncu2Kalkan.getWidth() - 50);
+                
+                // Aynı Y pozisyonlarını kaybeden için de uygula
+                oyuncu2Kalkan.setY(screenHeight - oyuncu2Kalkan.getHeight() - 50);
+                oyuncu2Asa.setY(screenHeight - oyuncu2Kalkan.getHeight() - oyuncu2Asa.getHeight() - 100);
+                oyuncu2Kilic.setY(screenHeight - oyuncu2Kalkan.getHeight() - oyuncu2Asa.getHeight() - oyuncu2Kilic.getHeight() - 150);
+            }
+
             // Tüm itemleri görünür yap
             oyuncu1Kilic.setVisibility(View.VISIBLE);
             oyuncu1Asa.setVisibility(View.VISIBLE);
@@ -633,64 +774,51 @@ public class gameActivity extends AppCompatActivity {
             oyuncu2Asa.setVisibility(View.VISIBLE);
             oyuncu2Kalkan.setVisibility(View.VISIBLE);
 
-            // Zarları gizle
-            oyuncu1Zar.setVisibility(View.INVISIBLE);
-            oyuncu2Zar.setVisibility(View.INVISIBLE);
-
-            // HP textlerini gizle
-            oyuncu1Hp.setVisibility(View.INVISIBLE);
-            oyuncu2Hp.setVisibility(View.INVISIBLE);
-
-            // Karakterleri güncelle
-            if (oyuncu1Can <= 0) {
-                // Oyuncu 1 kaybetti
-                oyuncu1Char.setVisibility(View.INVISIBLE);
-                oyuncu2Char.setImageResource(R.drawable.char_stand);
-            } else {
-                // Oyuncu 2 kaybetti
-                oyuncu2Char.setVisibility(View.INVISIBLE);
-                oyuncu1Char.setImageResource(R.drawable.char_stand);
-            }
-
             // Yeniden oyna butonunu göster
             yenidenButton.setVisibility(View.VISIBLE);
 
             // İstatistikleri göster
-            gosterOyunIstatistikleri();
+            gosterOyunIstatistikleri(kazananOyuncu, kazanmaSebebi);
         }
     }
 
-    private void gosterOyunIstatistikleri() {
+    private void gosterOyunIstatistikleri(String kazananBilgisi, String kazanmaSebebi) {
         long oyunSuresi = (System.currentTimeMillis() - oyunBaslangicZamani) / 1000;
 
-        String kazananBilgisi = oyuncu1Can <= 0 ?
-                String.format("OYUNCU 2 (HP: %.1f)", oyuncu2Can) :
-                String.format("OYUNCU 1 (HP: %.1f)", oyuncu1Can);
+        // Koruma değerlerini formatlı stringe çevir
+        String oyuncu1KorumaStr = oyuncu1EnYuksekKoruma == Integer.MAX_VALUE ? "Sınırsız" : String.valueOf(oyuncu1EnYuksekKoruma);
+        String oyuncu2KorumaStr = oyuncu2EnYuksekKoruma == Integer.MAX_VALUE ? "Sınırsız" : String.valueOf(oyuncu2EnYuksekKoruma);
 
         String istatistikler = String.format(
                 "🏆 %s 🏆\n" +
-                        "⏱️ %ds | 🎮 %d Tur\n\n" +
-                        "👤 OYUNCU 1\n" +
-                        "⚔️ %d | 🔮 %d | 🛡 %d\n" +
-                        "💥 Max: %d | ⚔️ Top: %d\n" +
-                        "💚 Max: %.1f | ❤️ Top: %.1f\n" +
-                        "🛡 Max: %d | 🔰 Top: %d\n\n" +
-                        "👤 OYUNCU 2\n" +
-                        "⚔️ %d | 🔮 %d | 🛡 %d\n" +
-                        "💥 Max: %d | ⚔️ Top: %d\n" +
-                        "💚 Max: %.1f | ❤️ Top: %.1f\n" +
-                        "🛡 Max: %d | 🔰 Top: %d",
+                "🎲 %s\n" +
+                "⏱️ %ds | 🎮 %d Tur\n" +
+                "━━━━━━━━━━━━━━━━━━━━\n" +
+                "OYUNCU 1 (Zar: %d)\n" +
+                "Kullanım: ⚔️%d 🔮%d 🛡%d\n" +
+                "Hasar: 💥%d (Max) | %d (Top)\n" +
+                "Can: 💚%.1f (Max) | %.1f (Top)\n" +
+                "Koruma: 🛡%s (Max) | %d (Top)\n" +
+                "━━━━━━━━━━━━━━━━━━━━\n" +
+                "OYUNCU 2 (Zar: %d)\n" +
+                "Kullanım: ⚔️%d 🔮%d 🛡%d\n" +
+                "Hasar: 💥%d (Max) | %d (Top)\n" +
+                "Can: 💚%.1f (Max) | %.1f (Top)\n" +
+                "Koruma: 🛡%s (Max) | %d (Top)",
                 kazananBilgisi,
+                kazanmaSebebi,
                 oyunSuresi,
                 turSayisi + 1,
+                oyuncu1ZarDegeri,
                 oyuncu1KilicKullanim, oyuncu1AsaKullanim, oyuncu1KalkanKullanim,
                 oyuncu1EnYuksekHasar, oyuncu1ToplamHasar,
                 oyuncu1EnYuksekCanYenileme, oyuncu1ToplamCanYenileme,
-                oyuncu1EnYuksekKoruma, oyuncu1ToplamKoruma,
+                oyuncu1KorumaStr, oyuncu1ToplamKoruma,
+                oyuncu2ZarDegeri,
                 oyuncu2KilicKullanim, oyuncu2AsaKullanim, oyuncu2KalkanKullanim,
                 oyuncu2EnYuksekHasar, oyuncu2ToplamHasar,
                 oyuncu2EnYuksekCanYenileme, oyuncu2ToplamCanYenileme,
-                oyuncu2EnYuksekKoruma, oyuncu2ToplamKoruma
+                oyuncu2KorumaStr, oyuncu2ToplamKoruma
         );
 
         TextView istatistikText = findViewById(R.id.istatistikText);

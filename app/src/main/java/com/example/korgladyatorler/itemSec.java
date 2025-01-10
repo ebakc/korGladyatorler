@@ -44,18 +44,43 @@ public class itemSec extends AppCompatActivity {
         // Item listesini oluştur
         itemListesiniOlustur();
         
-        // Manuel seçim butonu için listener ekle
+        // UI elemanlarını tanımla
+        TextView otomatikSecText = findViewById(R.id.otomatikSecText);
+        TextView manuelSecText = findViewById(R.id.manuelSecText);
+        TextView oyuncu1Id = findViewById(R.id.oyuncu1Id);
+        TextView oyuncu2Id = findViewById(R.id.oyuncu2Id);
+
+        // Başlangıçta oyuncu ID'lerini gizle
+        oyuncu1Id.setVisibility(View.GONE);
+        oyuncu2Id.setVisibility(View.GONE);
+
+        // Manuel seçim butonu için listener
         zarAtButton.setOnClickListener(v -> {
-            // Manuel seçim ve otomatik seçim butonlarını gizle
-            zarAtButton.setVisibility(View.INVISIBLE);
-            otomatikSecButton.setVisibility(View.INVISIBLE);
+            // Seçim textlerini gizle
+            otomatikSecText.setVisibility(View.GONE);
+            manuelSecText.setVisibility(View.GONE);
             
-            // Zar atma işlemini başlat
+            // Oyuncu ID'lerini göster
+            oyuncu1Id.setVisibility(View.VISIBLE);
+            oyuncu2Id.setVisibility(View.VISIBLE);
+
+            // Orijinal işlevi çağır
             zarAt();
         });
 
         // Otomatik seçim butonu için listener
-        otomatikSecButton.setOnClickListener(v -> otomatikItemSec());
+        otomatikSecButton.setOnClickListener(v -> {
+            // Seçim textlerini gizle
+            otomatikSecText.setVisibility(View.GONE);
+            manuelSecText.setVisibility(View.GONE);
+            
+            // Oyuncu ID'lerini göster
+            oyuncu1Id.setVisibility(View.VISIBLE);
+            oyuncu2Id.setVisibility(View.VISIBLE);
+
+            // Orijinal işlevi çağır
+            otomatikItemSec();
+        });
     }
 
     private void uiElemanlariniTanimla() {
@@ -81,10 +106,14 @@ public class itemSec extends AppCompatActivity {
     }
 
     private void zarAt() {
+        // Manuel ve otomatik seçim butonlarını gizle
+        zarAtButton.setVisibility(View.INVISIBLE);
+        otomatikSecButton.setVisibility(View.INVISIBLE);
+
         // Farklı zar değerleri oluştur (1-3 arası)
         do {
-            oyuncu1ZarDegeri = random.nextInt(3) + 1;  // 1-3 arası
-            oyuncu2ZarDegeri = random.nextInt(3) + 1;  // 1-3 arası
+            oyuncu1ZarDegeri = random.nextInt(3) + 1;
+            oyuncu2ZarDegeri = random.nextInt(3) + 1;
         } while (oyuncu1ZarDegeri == oyuncu2ZarDegeri);
 
         // Zarları göster

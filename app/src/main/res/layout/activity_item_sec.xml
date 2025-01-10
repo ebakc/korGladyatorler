@@ -19,6 +19,7 @@
 
     <TextView
         android:id="@+id/oyuncu1Id"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alagard"
@@ -34,6 +35,7 @@
 
     <TextView
         android:id="@+id/oyuncu2Id"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alagard"
@@ -46,6 +48,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099" />
+
+    <TextView
+        android:id="@+id/otomatikSecText"
+        android:layout_width="1200px"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alagard"
+        android:text="Otomatik secimde iki oyuncuya da 3 item rastgele hizlica dagitilir ve oyun baslar."
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.265" />
+
+    <TextView
+        android:id="@+id/manuelSecText"
+        android:layout_width="1600px"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alagard"
+        android:text="Manuel secimde ise zar at butonuyla iki oyuncuya da rastgele bir zar gelir ve zar degeri yuksek olan oyuncu ilk itemi secer sonrasinda oyuncular sirasiyla item secer."
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
 
     <ImageView
         android:id="@+id/oyuncu1Zar"
@@ -91,7 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.60"
+        app:layout_constraintVertical_bias="0.7"
         app:srcCompat="@drawable/manuel_itemsec_button" />
 
     <GridLayout
