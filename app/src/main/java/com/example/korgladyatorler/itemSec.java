@@ -3,10 +3,7 @@ package com.example.korgladyatorler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,7 +20,7 @@ import android.view.WindowInsetsController;
 
 public class itemSec extends AppCompatActivity {
     private ImageView oyuncu1Zar, oyuncu2Zar;
-    private ImageButton zarAtButton, devamButton;
+    private ImageButton zarAtButton, devamButton, otomatikSecButton;
     private GridLayout itemGrid;
     private LinearLayout oyuncu1Items, oyuncu2Items;
     private ArrayList<String> tumItemler, secilenItemler;
@@ -47,14 +44,25 @@ public class itemSec extends AppCompatActivity {
         // Item listesini oluştur
         itemListesiniOlustur();
         
-        // Zar atma butonunu ayarla
-        zarAtButton.setOnClickListener(v -> zarAt());
+        // Manuel seçim butonu için listener ekle
+        zarAtButton.setOnClickListener(v -> {
+            // Manuel seçim ve otomatik seçim butonlarını gizle
+            zarAtButton.setVisibility(View.INVISIBLE);
+            otomatikSecButton.setVisibility(View.INVISIBLE);
+            
+            // Zar atma işlemini başlat
+            zarAt();
+        });
+
+        // Otomatik seçim butonu için listener
+        otomatikSecButton.setOnClickListener(v -> otomatikItemSec());
     }
 
     private void uiElemanlariniTanimla() {
         oyuncu1Zar = findViewById(R.id.oyuncu1Zar);
         oyuncu2Zar = findViewById(R.id.oyuncu2Zar);
-        zarAtButton = findViewById(R.id.zarAtButton);
+        zarAtButton = findViewById(R.id.manuelSecButton);
+        otomatikSecButton = findViewById(R.id.otomatikSecButton);
         devamButton = findViewById(R.id.devamButton);
         itemGrid = findViewById(R.id.itemGrid);
         oyuncu1Items = findViewById(R.id.oyuncu1Items);
@@ -64,6 +72,12 @@ public class itemSec extends AppCompatActivity {
         
         // secilenItemler listesini 6 elemanlı olarak başlat
         secilenItemler = new ArrayList<>(Collections.nCopies(6, null));
+
+        // Manuel seçim butonunu görünür yap
+        zarAtButton.setVisibility(View.VISIBLE);
+
+        // Grid'i başlangıçta gizle
+        itemGrid.setVisibility(View.INVISIBLE);
     }
 
     private void zarAt() {
@@ -478,5 +492,102 @@ public class itemSec extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             );
         }
+    }
+
+    private void otomatikItemSec() {
+        // Tüm seçim butonlarını gizle
+        zarAtButton.setVisibility(View.INVISIBLE);
+        otomatikSecButton.setVisibility(View.INVISIBLE);
+        findViewById(R.id.manuelSecButton).setVisibility(View.INVISIBLE); // Manuel seçim butonunu gizle
+
+        // Item grid'ini gizle
+        itemGrid.setVisibility(View.INVISIBLE);
+
+        // Tüm itemleri içeren listeleri oluştur
+        ArrayList<String> kiliclar = new ArrayList<>();
+        ArrayList<String> asalar = new ArrayList<>();
+        ArrayList<String> kalkanlar = new ArrayList<>();
+
+        // Itemleri kategorilerine göre ayır
+        for (String item : tumItemler) {
+            if (item.contains("kilic")) {
+                kiliclar.add(item);
+            } else if (item.contains("asa")) {
+                asalar.add(item);
+            } else if (item.contains("kalkan")) {
+                kalkanlar.add(item);
+            }
+        }
+
+        // Oyuncu 1 için rastgele seçim yap
+        String oyuncu1Kilic = secVeKaldir(kiliclar);
+        String oyuncu1Asa = secVeKaldir(asalar);
+        String oyuncu1Kalkan = secVeKaldir(kalkanlar);
+
+        // Oyuncu 2 için rastgele seçim yap
+        String oyuncu2Kilic = secVeKaldir(kiliclar);
+        String oyuncu2Asa = secVeKaldir(asalar);
+        String oyuncu2Kalkan = secVeKaldir(kalkanlar);
+
+        // Seçilen itemleri oyuncu layoutlarına ekle
+        ekleItemOyuncuya(oyuncu1Items, oyuncu1Kilic, true);
+        ekleItemOyuncuya(oyuncu1Items, oyuncu1Asa, true);
+        ekleItemOyuncuya(oyuncu1Items, oyuncu1Kalkan, true);
+        
+        ekleItemOyuncuya(oyuncu2Items, oyuncu2Kilic, false);
+        ekleItemOyuncuya(oyuncu2Items, oyuncu2Asa, false);
+        ekleItemOyuncuya(oyuncu2Items, oyuncu2Kalkan, false);
+
+        // Seçilen itemları kaydet
+        secilenItemler.set(0, oyuncu1Kilic);
+        secilenItemler.set(1, oyuncu1Asa);
+        secilenItemler.set(2, oyuncu1Kalkan);
+        secilenItemler.set(3, oyuncu2Kilic);
+        secilenItemler.set(4, oyuncu2Asa);
+        secilenItemler.set(5, oyuncu2Kalkan);
+
+        // İtem isimlerini göster
+        itemleriGoster(true);
+
+        // Devam butonunu göster
+        devamButton.setVisibility(View.VISIBLE);
+        devamButton.setOnClickListener(v -> oyunaGec());
+    }
+
+    // Yeni yardımcı metod
+    private void ekleItemOyuncuya(LinearLayout hedefLayout, String itemId, boolean isOyuncu1) {
+        ImageView itemView = new ImageView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(150, 150);
+        params.setMargins(0, 5, 0, 5);
+        itemView.setLayoutParams(params);
+        itemView.setImageResource(getResources().getIdentifier(itemId, "drawable", getPackageName()));
+        itemView.setTag(itemId);
+
+        // İtemi doğru sırayla ekle
+        if (itemId.contains("kilic")) {
+            hedefLayout.addView(itemView, 0);
+        } else if (itemId.contains("asa")) {
+            int asaIndex = hedefLayout.getChildCount() == 0 ? 0 : 1;
+            hedefLayout.addView(itemView, asaIndex);
+        } else {
+            hedefLayout.addView(itemView);
+        }
+    }
+
+    private String secVeKaldir(ArrayList<String> liste) {
+        if (liste.isEmpty()) return null;
+        int index = random.nextInt(liste.size());
+        return liste.remove(index);
+    }
+
+    private void gosterSecilenItem(ImageView imageView, TextView textView, String itemId) {
+        // Görseli ayarla
+        imageView.setImageResource(getResources().getIdentifier(itemId, "drawable", getPackageName()));
+        imageView.setVisibility(View.VISIBLE);
+
+        // İsmi ayarla
+        String itemAdi = itemId.split("_")[3]; // id01_a_kilic_kritikseven formatından ismi al
+        textView.setText(itemAdi);
+        textView.setVisibility(View.VISIBLE);
     }
 }

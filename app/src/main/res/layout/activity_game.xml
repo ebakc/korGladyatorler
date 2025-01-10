@@ -39,6 +39,38 @@
             app:layout_constraintVertical_bias="0.050000012" />
 
         <TextView
+            android:id="@+id/oyuncu1ZarSayi"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:text="Zar 1"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.403"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <TextView
+            android:id="@+id/oyuncu2ZarSayi"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:text="Zar 1"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.597"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <TextView
             android:id="@+id/istatistikText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,6 +170,7 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
+            android:onClick="baslaButtonClicked"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -69,7 +69,7 @@
         app:layout_constraintTop_toTopOf="@+id/oyuncu2Id" />
 
     <ImageButton
-        android:id="@+id/zarAtButton"
+        android:id="@+id/otomatikSecButton"
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:background="@android:color/transparent"
@@ -78,8 +78,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498"
-        app:srcCompat="@drawable/item_button" />
+        app:layout_constraintVertical_bias="0.40"
+        app:srcCompat="@drawable/otomatik_itemsec_button" />
+
+    <ImageButton
+        android:id="@+id/manuelSecButton"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.60"
+        app:srcCompat="@drawable/manuel_itemsec_button" />
 
     <GridLayout
         android:id="@+id/itemGrid"
