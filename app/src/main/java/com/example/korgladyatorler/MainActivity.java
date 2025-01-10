@@ -1,8 +1,12 @@
 package com.example.korgladyatorler;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -26,6 +30,25 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton baslaButton, nasilOynanirButton;
     private LinearLayout nasilOynanirPanel;
     private TextView kapatButton;
+    private MusicService musicService;
+    private boolean serviceBound = false;
+    private ImageButton sesButton;
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
+            musicService = binder.getService();
+            serviceBound = true;
+            musicService.playMusic(R.raw.theme_music);
+            updateMusicButton();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +187,34 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, itemSec.class);
             startActivity(intent);
         });
+
+        // Müzik servisini başlat
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        sesButton = findViewById(R.id.menusesButton);
+        sesButton.setOnClickListener(v -> {
+            if (serviceBound) {
+                musicService.toggleMusic();
+                updateMusicButton();
+            }
+        });
+    }
+
+    private void updateMusicButton() {
+        if (serviceBound) {
+            sesButton.setImageResource(musicService.isMusicEnabled() ? 
+                R.drawable.muzik_acik : R.drawable.muzik_kapali);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceBound) {
+            unbindService(serviceConnection);
+            serviceBound = false;
+        }
     }
 
     // Sistem çubuklarını gizleme ve tam ekran modu etkinleştirme

@@ -15,6 +15,7 @@ import java.util.Random;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.os.Build;
+import android.text.Html;
 
 public class gameActivity extends AppCompatActivity {
     // Sabitler
@@ -27,6 +28,7 @@ public class gameActivity extends AppCompatActivity {
     private TextView oyuncu1Hp, oyuncu2Hp;
     private ImageButton baslaButton, yenidenButton;
     private ImageView oyuncu1Zar, oyuncu2Zar, oyuncu1Char, oyuncu2Char;
+    private TextView p1tursonucuBilgiText, p2tursonucuBilgiText;
 
     // Oyun Değişkenleri
     private double oyuncu1Can = BASLANGIC_CAN;
@@ -99,8 +101,8 @@ public class gameActivity extends AppCompatActivity {
         // Başlangıç durumunu ayarla
         oyuncu1Can = BASLANGIC_CAN;
         oyuncu2Can = BASLANGIC_CAN;
-        oyuncu1Hp.setText("HP: " + oyuncu1Can);
-        oyuncu2Hp.setText("HP: " + oyuncu2Can);
+        oyuncu1Hp.setText(String.format("%.1f", oyuncu1Can));
+        oyuncu2Hp.setText(String.format("%.1f", oyuncu2Can));
         oyunBaslangicZamani = System.currentTimeMillis();
 
         // Itemlerin başlangıçta görünmez olmasını sağla
@@ -108,6 +110,8 @@ public class gameActivity extends AppCompatActivity {
         findViewById(R.id.oyuncu1Kalkan).setVisibility(View.GONE);
         findViewById(R.id.oyuncu2Asa).setVisibility(View.GONE);
         findViewById(R.id.oyuncu2Kalkan).setVisibility(View.GONE);
+
+        MusicService.playMusic(R.raw.battle_music);
     }
 
     private void uiElemanlariniTanimla() {
@@ -136,6 +140,9 @@ public class gameActivity extends AppCompatActivity {
 
         // Başlama butonu için listener zaten uiElemanlariniTanimla'da ayarlandı
         baslaButton.setOnClickListener(v -> oyunuBaslat());
+
+        p1tursonucuBilgiText = findViewById(R.id.p1tursonucuBilgiText);
+        p2tursonucuBilgiText = findViewById(R.id.p2tursonucuBilgiText);
     }
 
     private void butonlariAyarla() {
@@ -171,10 +178,12 @@ public class gameActivity extends AppCompatActivity {
             oyuncu1ZarDegeri = zarDegeri;
             oyuncu1SecimYapti = true;
             oyuncu1Zar.setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu1ZarSayi).setVisibility(View.INVISIBLE); // Sadece oyuncu 1'in zar metni gizlenir
         } else {
             oyuncu2ZarDegeri = zarDegeri;
             oyuncu2SecimYapti = true;
             oyuncu2Zar.setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu2ZarSayi).setVisibility(View.INVISIBLE); // Sadece oyuncu 2'nin zar metni gizlenir
         }
 
         // Item kullanımını işaretle
@@ -218,12 +227,14 @@ public class gameActivity extends AppCompatActivity {
         ImageView charGorseli = oyuncu == 1 ? oyuncu1Char : oyuncu2Char;
         charGorseli.setImageResource(R.drawable.char_attack);
 
-        // Her iki oyuncu da seçim yaptıysa sonuçları uygula
-        if(oyuncu1SecimYapti && oyuncu2SecimYapti) {
+        // İki oyuncu da seçim yaptıysa
+        if (oyuncu1SecimYapti && oyuncu2SecimYapti) {
             // Kullanılan itemleri hemen gizle
             gizleKullanilanItemler();
-            
+
             new Handler().postDelayed(() -> {
+                oyuncu1ZarDegeri = random.nextInt(3) + 1; // 1-3 arası
+                oyuncu2ZarDegeri = random.nextInt(3) + 1; // 1-3 arası
                 turSonuIslemleri();
             }, ANIMASYON_SURESI);
         }
@@ -452,8 +463,21 @@ public class gameActivity extends AppCompatActivity {
         // Zarları göster ve değerlerini ayarla
         oyuncu1Zar.setImageResource(getResources().getIdentifier("zar" + oyuncu1ZarDegeri, "drawable", getPackageName()));
         oyuncu2Zar.setImageResource(getResources().getIdentifier("zar" + oyuncu2ZarDegeri, "drawable", getPackageName()));
+        
+        // Zarları ve zar metinlerini birlikte göster
         oyuncu1Zar.setVisibility(View.VISIBLE);
         oyuncu2Zar.setVisibility(View.VISIBLE);
+        TextView oyuncu1ZarText = findViewById(R.id.oyuncu1ZarSayi);
+        TextView oyuncu2ZarText = findViewById(R.id.oyuncu2ZarSayi);
+        oyuncu1ZarText.setText("Zar " + oyuncu1ZarDegeri);
+        oyuncu2ZarText.setText("Zar " + oyuncu2ZarDegeri);
+        oyuncu1ZarText.setVisibility(View.VISIBLE);
+        oyuncu2ZarText.setVisibility(View.VISIBLE);
+
+        // Tur sonucu metinlerini güncelle ve göster
+        guncelleTurSonucuMetinleri();
+        p1tursonucuBilgiText.setVisibility(View.VISIBLE);
+        p2tursonucuBilgiText.setVisibility(View.VISIBLE);
 
         // Koruma ve hasar değerlerini logla
         Log.d("TurSonu", String.format("Başlangıç - Oyuncu1: %.1f, Oyuncu2: %.1f", oyuncu1Can, oyuncu2Can));
@@ -489,8 +513,8 @@ public class gameActivity extends AppCompatActivity {
         canYenilemeUygula();
 
         // Can değerlerini güncelle
-        oyuncu1Hp.setText(String.format("HP: %.1f", Math.max(0, oyuncu1Can)));
-        oyuncu2Hp.setText(String.format("HP: %.1f", Math.max(0, oyuncu2Can)));
+        oyuncu1Hp.setText(String.format("%.1f", Math.max(0, oyuncu1Can)));
+        oyuncu2Hp.setText(String.format("%.1f", Math.max(0, oyuncu2Can)));
 
         // Oyun bitti mi kontrol et
         if (oyuncu1Can <= 0 || oyuncu2Can <= 0) {
@@ -705,9 +729,14 @@ public class gameActivity extends AppCompatActivity {
             findViewById(R.id.oyuncu1Id).setVisibility(View.INVISIBLE);
             findViewById(R.id.oyuncu2Id).setVisibility(View.INVISIBLE);
 
-            // Zarları gizle
+            // Zarları ve ilgili metinleri gizle
             oyuncu1Zar.setVisibility(View.INVISIBLE);
             oyuncu2Zar.setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu1ZarSayi).setVisibility(View.INVISIBLE);
+            findViewById(R.id.oyuncu2ZarSayi).setVisibility(View.INVISIBLE);
+            p1tursonucuBilgiText.setVisibility(View.INVISIBLE);
+            p2tursonucuBilgiText.setVisibility(View.INVISIBLE);
+            findViewById(R.id.hpText).setVisibility(View.INVISIBLE);
 
             // Karakterleri güncelle ve itemleri yeniden konumlandır
             if (oyuncu1Can < oyuncu2Can) {
@@ -829,10 +858,20 @@ public class gameActivity extends AppCompatActivity {
     private void oyunuBaslat() {
         // Itemleri dağıt ve oyunu başlat
         itemleriDagit();
-
-        // UI'ı güncelle
+        
+        // Başla butonunu gizle
         baslaButton.setVisibility(View.INVISIBLE);
-        // Tüm itemleri görünür yap
+
+        // Oyuncu ID'lerini göster
+        findViewById(R.id.oyuncu1Id).setVisibility(View.VISIBLE);
+        findViewById(R.id.oyuncu2Id).setVisibility(View.VISIBLE);
+
+        // HP metinlerini göster
+        oyuncu1Hp.setVisibility(View.VISIBLE);
+        oyuncu2Hp.setVisibility(View.VISIBLE);
+        findViewById(R.id.hpText).setVisibility(View.VISIBLE);
+
+        // İtemleri göster
         oyuncu1Kilic.setVisibility(View.VISIBLE);
         oyuncu1Asa.setVisibility(View.VISIBLE);
         oyuncu1Kalkan.setVisibility(View.VISIBLE);
@@ -840,8 +879,15 @@ public class gameActivity extends AppCompatActivity {
         oyuncu2Asa.setVisibility(View.VISIBLE);
         oyuncu2Kalkan.setVisibility(View.VISIBLE);
 
-        oyuncu1Hp.setVisibility(View.VISIBLE);
-        oyuncu2Hp.setVisibility(View.VISIBLE);
+        // Zar ve zar metinlerini gizli başlat
+        oyuncu1Zar.setVisibility(View.INVISIBLE);
+        oyuncu2Zar.setVisibility(View.INVISIBLE);
+        findViewById(R.id.oyuncu1ZarSayi).setVisibility(View.INVISIBLE);
+        findViewById(R.id.oyuncu2ZarSayi).setVisibility(View.INVISIBLE);
+
+        // Tur sonucu metinlerini gizli başlat
+        p1tursonucuBilgiText.setVisibility(View.INVISIBLE);
+        p2tursonucuBilgiText.setVisibility(View.INVISIBLE);
 
         // Oyun başlangıç zamanını kaydet
         oyunBaslangicZamani = System.currentTimeMillis();
@@ -910,5 +956,139 @@ public class gameActivity extends AppCompatActivity {
         oyuncu2Kilic.setVisibility(oyuncu2KilicKullanildi ? View.INVISIBLE : View.VISIBLE);
         oyuncu2Asa.setVisibility(oyuncu2AsaKullanildi ? View.INVISIBLE : View.VISIBLE);
         oyuncu2Kalkan.setVisibility(oyuncu2KalkanKullanildi ? View.INVISIBLE : View.VISIBLE);
+
+        // Zarları ve zar metinlerini birlikte gizle
+        oyuncu1Zar.setVisibility(View.INVISIBLE);
+        oyuncu2Zar.setVisibility(View.INVISIBLE);
+        findViewById(R.id.oyuncu1ZarSayi).setVisibility(View.INVISIBLE);
+        findViewById(R.id.oyuncu2ZarSayi).setVisibility(View.INVISIBLE);
+    }
+
+    private void guncelleTurSonucuMetinleri() {
+        // Oyuncu 1 için metin oluştur (Emoji + Değer formatı)
+        StringBuilder p1Text = new StringBuilder();
+        
+        // Hasar satırı
+        p1Text.append("⚔️ ");
+        if (oyuncu1Hasar > 0) {
+            p1Text.append(oyuncu1Hasar);
+        } else {
+            p1Text.append("<font color='#FF0000'>X</font>");
+        }
+        p1Text.append("<br>");
+
+        // Can Yenileme satırı
+        p1Text.append("💚 ");
+        if (oyuncu1AsaKullanildi) {
+            p1Text.append(String.format("%.1f", oyuncu1CanYenileme));
+        } else {
+            p1Text.append("<font color='#FF0000'>X</font>");
+        }
+        p1Text.append("<br>");
+
+        // Kalkan Koruma satırı
+        p1Text.append("🛡️ ");
+        if (oyuncu1KalkanKullanildi) {
+            p1Text.append(oyuncu1Koruma == Integer.MAX_VALUE ? "∞" : oyuncu1Koruma);
+        } else {
+            p1Text.append("<font color='#FF0000'>X</font>");
+        }
+        p1Text.append("<br>");
+
+        // Can Değişimi hesaplama - Oyuncu 1 için
+        double canDegisimi;
+        if (oyuncu1KalkanKullanildi && oyuncu2KalkanKullanildi) {
+            canDegisimi = 0; // İki taraf da kalkan kullanıyorsa can değişimi 0
+        } else if (oyuncu1KalkanKullanildi && oyuncu1Koruma == Integer.MAX_VALUE) {
+            canDegisimi = 0; // Sonsuz koruma varsa can değişimi 0
+        } else if (oyuncu1AsaKullanildi) {
+            canDegisimi = oyuncu1CanYenileme - (oyuncu2Hasar - oyuncu1Koruma);
+        } else {
+            canDegisimi = -(oyuncu2Hasar - oyuncu1Koruma);
+        }
+        String renk = canDegisimi > 0 ? "#00FF00" : canDegisimi < 0 ? "#FF0000" : "#FFFFFF";
+        p1Text.append("❤️ <font color='").append(renk).append("'>")
+              .append(String.format("%s%.1f", canDegisimi >= 0 ? "+" : "", canDegisimi))
+              .append("</font>");
+
+        // Oyuncu 2 için metin oluştur (Değer + Emoji formatı)
+        StringBuilder p2Text = new StringBuilder();
+        
+        // Hasar satırı
+        if (oyuncu2Hasar > 0) {
+            p2Text.append(oyuncu2Hasar);
+        } else {
+            p2Text.append("<font color='#FF0000'>X</font>");
+        }
+        p2Text.append(" ⚔️<br>");
+
+        // Can Yenileme satırı
+        if (oyuncu2AsaKullanildi) {
+            p2Text.append(String.format("%.1f", oyuncu2CanYenileme));
+        } else {
+            p2Text.append("<font color='#FF0000'>X</font>");
+        }
+        p2Text.append(" 💚<br>");
+
+        // Kalkan Koruma satırı
+        if (oyuncu2KalkanKullanildi) {
+            p2Text.append(oyuncu2Koruma == Integer.MAX_VALUE ? "∞" : oyuncu2Koruma);
+        } else {
+            p2Text.append("<font color='#FF0000'>X</font>");
+        }
+        p2Text.append(" 🛡️<br>");
+
+        // Can Değişimi hesaplama - Oyuncu 2 için
+        if (oyuncu1KalkanKullanildi && oyuncu2KalkanKullanildi) {
+            canDegisimi = 0; // İki taraf da kalkan kullanıyorsa can değişimi 0
+        } else if (oyuncu2KalkanKullanildi && oyuncu2Koruma == Integer.MAX_VALUE) {
+            canDegisimi = 0; // Sonsuz koruma varsa can değişimi 0
+        } else if (oyuncu2AsaKullanildi) {
+            canDegisimi = oyuncu2CanYenileme - (oyuncu1Hasar - oyuncu2Koruma);
+        } else {
+            canDegisimi = -(oyuncu1Hasar - oyuncu2Koruma);
+        }
+        renk = canDegisimi > 0 ? "#00FF00" : canDegisimi < 0 ? "#FF0000" : "#FFFFFF";
+        p2Text.append("<font color='").append(renk).append("'>")
+              .append(String.format("%s%.1f", canDegisimi >= 0 ? "+" : "", canDegisimi))
+              .append("</font> ❤️");
+
+        // HP metinlerini güncelle - sadece değerleri göster
+        oyuncu1Hp.setText(String.format("%.1f", Math.max(0, oyuncu1Can)));
+        oyuncu2Hp.setText(String.format("%.1f", Math.max(0, oyuncu2Can)));
+
+        // HTML formatında metin oluştur ve ayarla
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            p1tursonucuBilgiText.setText(Html.fromHtml(p1Text.toString(), Html.FROM_HTML_MODE_COMPACT));
+            p2tursonucuBilgiText.setText(Html.fromHtml(p2Text.toString(), Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            p1tursonucuBilgiText.setText(Html.fromHtml(p1Text.toString()));
+            p2tursonucuBilgiText.setText(Html.fromHtml(p2Text.toString()));
+        }
+    }
+
+    private void yeniTurHazirlik() {
+        // Zarları gizle
+        oyuncu1Zar.setVisibility(View.INVISIBLE);
+        oyuncu2Zar.setVisibility(View.INVISIBLE);
+        
+        // Zar metinlerini görünür yap
+        findViewById(R.id.oyuncu1ZarSayi).setVisibility(View.VISIBLE);
+        findViewById(R.id.oyuncu2ZarSayi).setVisibility(View.VISIBLE);
+        
+        // Kullanılan itemleri sıfırla
+        oyuncu1KilicKullanildi = false;
+        oyuncu1AsaKullanildi = false;
+        oyuncu1KalkanKullanildi = false;
+        oyuncu2KilicKullanildi = false;
+        oyuncu2AsaKullanildi = false;
+        oyuncu2KalkanKullanildi = false;
+
+        // Seçimleri sıfırla
+        oyuncu1SecimYapti = false;
+        oyuncu2SecimYapti = false;
+
+        // Kullanılabilir itemleri göster
+        gosterKullanilabilirItemler();
     }
 }

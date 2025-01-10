@@ -25,6 +25,7 @@
 
         <TextView
             android:id="@+id/oyuncu1Id"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
@@ -39,36 +40,76 @@
             app:layout_constraintVertical_bias="0.050000012" />
 
         <TextView
+            android:id="@+id/p1tursonucuBilgiText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:gravity="left"
+            android:lineSpacingExtra="8dp"
+            android:maxLines="10"
+            android:singleLine="false"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.374"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.852" />
+
+        <TextView
+            android:id="@+id/p2tursonucuBilgiText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:gravity="right"
+            android:lineSpacingExtra="8dp"
+            android:maxLines="10"
+            android:singleLine="false"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.627"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="0.852" />
+
+        <TextView
             android:id="@+id/oyuncu1ZarSayi"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
             android:text="Zar 1"
             android:textColor="@color/white"
             android:textSize="30sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.403"
+            app:layout_constraintHorizontal_bias="0.351"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.6" />
+            app:layout_constraintVertical_bias="0.143" />
 
         <TextView
             android:id="@+id/oyuncu2ZarSayi"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
             android:text="Zar 1"
             android:textColor="@color/white"
             android:textSize="30sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.597"
+            app:layout_constraintHorizontal_bias="0.643"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.6" />
+            app:layout_constraintVertical_bias="0.143" />
 
         <TextView
             android:id="@+id/istatistikText"
@@ -92,6 +133,7 @@
 
         <TextView
             android:id="@+id/oyuncu2Id"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
@@ -137,13 +179,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="HP: 100"
+            android:text="100"
             android:textColor="@color/black"
             android:textSize="35sp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.284"
+            app:layout_constraintHorizontal_bias="0.37"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
             app:layout_constraintVertical_bias="1.0" />
@@ -153,13 +195,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alagard"
-            android:text="HP: 100"
+            android:text="100"
             android:textColor="@color/black"
             android:textSize="35sp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.715"
+            app:layout_constraintHorizontal_bias="0.63"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/hpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alagard"
+            android:text="HP"
+            android:textColor="@color/black"
+            android:textSize="35sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
             app:layout_constraintVertical_bias="1.0" />
@@ -178,6 +236,20 @@
             app:srcCompat="@drawable/basla_button" />
 
         <ImageButton
+            android:id="@+id/gameSesButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.026"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.977"
+            app:srcCompat="@drawable/muzik_acik" />
+
+        <ImageButton
             android:id="@+id/yenidenButton"
             android:layout_width="125dp"
             android:layout_height="50dp"
@@ -193,7 +265,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Kilic"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -208,7 +280,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Asa"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -223,7 +295,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu1Kalkan"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -238,7 +310,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Kilic"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -253,7 +325,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Asa"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -268,7 +340,7 @@
 
         <ImageButton
             android:id="@+id/oyuncu2Kalkan"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="150px"
             android:layout_height="150px"
             android:background="@android:color/transparent"
@@ -283,28 +355,28 @@
 
         <ImageView
             android:id="@+id/oyuncu1Zar"
-            android:visibility="gone"
-            android:layout_width="200px"
-            android:layout_height="200px"
+            android:layout_width="125px"
+            android:layout_height="125px"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.357"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.75"
+            app:layout_constraintVertical_bias="0.019"
             app:srcCompat="@drawable/zar1" />
 
         <ImageView
             android:id="@+id/oyuncu2Zar"
-            android:visibility="gone"
-            android:layout_width="200px"
-            android:layout_height="200px"
+            android:layout_width="125px"
+            android:layout_height="125px"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintHorizontal_bias="0.638"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/background"
-            app:layout_constraintVertical_bias="0.75"
+            app:layout_constraintVertical_bias="0.019"
             app:srcCompat="@drawable/zar1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
